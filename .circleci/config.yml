@@ -16,3 +16,4 @@ jobs:
           command: npm start
           background: true
       - run: npm test
+      
