@@ -12,5 +12,7 @@ jobs:
       - checkout
       - run: npm install mocha
       - run: npm install
-      - run: npm start
+      - run: 
+          command: npm start
+          background: true
       - run: npm test
