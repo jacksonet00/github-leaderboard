@@ -38,4 +38,5 @@ def fetch(username, repo, owner):
 
   return list(processed)
 
-print(fetch('leeg8', 'github-leaderboard', 'jacksonet00'))
+# A simple test
+# print(fetch('leeg8', 'github-leaderboard', 'jacksonet00'))
