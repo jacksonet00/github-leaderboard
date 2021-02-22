@@ -24,28 +24,18 @@ def fetch(username, repo, owner):
   # filtering the commits of user 'username'
   filtered = filter(lambda x: x['commit']['author']['name'] == username, data)
 
+  # defining returning data of each commit
+  def map_commit(commit):
+    return {
+      'sha': commit['sha'],
+      'message': commit['commit']['message'],
+      'date': commit['commit']['author']['date'],
+      'verified': commit['commit']['verification']['verified']
+    }
 
   # mapping each commit to the previously defined object
   processed = map(map_commit, filtered)
 
   return list(processed)
 
-""" 
-  Defines data returned for each commit by fetch functions
-Parameters:
-  @commit: Commit dict (JSON object) produced from GitHub API call
-Return:
-  The dict with the 'sha', 'message', 'date', and 'verified'
-  fields retained
-"""
-def map_commit(commit):
-  return {
-    'sha': commit['sha'],
-    'message': commit['commit']['message'],
-    'date': commit['commit']['author']['date'],
-    'verified': commit['commit']['verification']['verified']
-  }
-
-""" A simple test of fetch """
-def test_fetch_basic():
-  print(fetch('leeg8', 'github-leaderboard', 'jacksonet00'))
+print(fetch('leeg8', 'github-leaderboard', 'jacksonet00'))
