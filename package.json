@@ -1,11 +1,11 @@
 {
-  "name": "Discussion4",
+  "name": "test_assignment",
   "version": "1.0.0",
   "description": "Testing Practice",
-  "main": "server.js",
+  "main": "test_assignment/server.js",
   "scripts": {
-    "test": "mocha server.test.js",
-    "start": "node server.js"
+    "test": "mocha test_assignment/server.test.js",
+    "start": "node test_assignment/server.js"
   },
   "author": "Medhir Bhargava & Alex Webber",
   "license": "MIT",
