@@ -9,14 +9,20 @@ class ExtendedUser(models.Model):
    github_username = models.CharField(max_length=255, unique=True, blank=True, null=True)
    github_key = models.CharField(max_length=255, unique=True, blank=True, null=True)
 
+   def __str__(self):
+      return f"{self.user}"
+
 class Result(models.Model):
    def default_score():
       return 0
 
-   user_id = models.ForeignKey(ExtendedUser, on_delete=models.CASCADE)
+   user = models.ForeignKey(ExtendedUser, on_delete=models.CASCADE)
    score = models.IntegerField(default=default_score)
    date_created = models.DateTimeField(auto_now_add=True)
    date_modified = models.DateTimeField(auto_now=True)
+
+   def __str__(self):
+      return f"{user}: {score} points"
 
 class Leaderboard(models.Model):
    def default_start_datetime():
@@ -34,11 +40,17 @@ class Leaderboard(models.Model):
    date_created = models.DateTimeField(auto_now_add=True)
    date_modified = models.DateTimeField(auto_now=True)
 
+   def __str__(self):
+      return self.name
+
 class Commit(models.Model):
    def default_commit_count():
       return 0
 
-   user_id = models.ForeignKey(ExtendedUser, on_delete=models.CASCADE)
-   commit_count = models.IntegerField(default=default_commit_count, blank=True, null=True)
+   user = models.ForeignKey(ExtendedUser, on_delete=models.CASCADE)
+   commit_count = models.IntegerField(default=default_commit_count)
    date_created = models.DateTimeField(auto_now_add=True)
    date_modified = models.DateTimeField(auto_now=True)
+
+   def __str__(self):
+      return f"{self.user}: {self.commit_count} commits"
