@@ -4,6 +4,10 @@
 
 [The project is setup with cookiecutter and docker so follow this link.](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html) The following instructions is the bare minimal to get things running. Important configuration instructions is included in the link.
 
+Important locations are `config` which contains top level information about Django like routing for homepage and installed apps. `requirements` contain the Python packages that Docker uses. `compose` is for Docker. `github_leaderboard` contains all the Django files that you would modify.
+
+`db_sql_files` is for Jackson. They contain the SQL schema that he made.
+
 ### Setup docker environment from our project dependencies
 
    1. Build the docker containers
@@ -67,7 +71,7 @@
       docker-compose -f local.yml run --rm django python manage.py migrate
       ```
 
-If typing out the docker command is a pain, just alias with `alias docker_django="docker-compose -f local.yml run --rm django python"`
+If typing out the docker command is a pain, just alias with `alias docker_django="docker-compose -f local.yml run --rm django python manage.py"`
 
 ### Create new database administrator account
 
