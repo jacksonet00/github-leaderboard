@@ -24,7 +24,7 @@ class Result(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{user}: {score} points"
+        return f"{self.user}: {self.score} points"
 
 
 class Leaderboard(models.Model):
