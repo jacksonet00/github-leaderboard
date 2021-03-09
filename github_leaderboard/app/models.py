@@ -15,7 +15,7 @@ class ExtendedUser(models.Model):
 
 
 class Result(models.Model):
-    def default_score():
+    def default_score(self):
         return 0
 
     user = models.ForeignKey(ExtendedUser, on_delete=models.CASCADE)
@@ -28,10 +28,10 @@ class Result(models.Model):
 
 
 class Leaderboard(models.Model):
-    def default_start_datetime():
+    def default_start_datetime(self):
         return dt.datetime.now()
 
-    def default_end_datetime():
+    def default_end_datetime(self):
         return dt.datetime.now() + dt.timedelta(days=7)
 
     name = models.CharField(max_length=255)
@@ -48,7 +48,7 @@ class Leaderboard(models.Model):
 
 
 class Commit(models.Model):
-    def default_commit_count():
+    def default_commit_count(self):
         return 0
 
     user = models.ForeignKey(ExtendedUser, on_delete=models.CASCADE)

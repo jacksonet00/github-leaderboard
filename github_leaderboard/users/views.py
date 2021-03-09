@@ -27,7 +27,7 @@ class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def get_success_url(self):
         return self.request.user.get_absolute_url()  # type: ignore [union-attr]
 
-    def get_object(self):
+    def get_object(self, **kwargs):
         return self.request.user
 
 
