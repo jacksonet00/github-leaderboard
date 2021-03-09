@@ -157,6 +157,8 @@ typings/
 !.vscode/launch.json
 !.vscode/extensions.json
 
+### Idea IDE ignore
+.idea
 
 
 
