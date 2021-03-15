@@ -1,56 +1,59 @@
-from django.shortcuts import get_object_or_404
 import requests
-import json
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 from . import models
-from django.contrib.auth import get_user_model
-User = get_user_model()
 
+User = get_user_model()
 
 '''
 given a link header from github, find the link for the next url which they use for pagination
 '''
+
+
 def find_next(link):
     for l in link.split(','):
         a, b = l.split(';')
         if b.strip() == 'rel="next"':
             return a.strip()[1:-1]
 
+
 def is_obj_in_page(o, page):
     for obj in page:
-        if(obj['node_id'] == o.nodeid ):
+        if (obj['node_id'] == o.nodeid):
             return True
     return False
 
+
 def refresh_leaderboard_commits(id):
     leaderboard = get_object_or_404(models.Leaderboard, id=id)
-    url_str = leaderboard.repo_url.replace('https://github.com/','').strip("/")
-    
+    url_str = leaderboard.repo_url.replace('https://github.com/', '').strip("/")
+
     user = leaderboard.owner.github_username
     token = leaderboard.access_token
-    commits_url = 'https://api.github.com/repos/'+ url_str + '/commits'
+    commits_url = 'https://api.github.com/repos/' + url_str + '/commits'
     # commits_url = 'https://api.github.com/repos/jacksonet00/github-leaderboard/commits'
-    
-    commits = models.CommitRecord.objects.all().order_by('-timestamp')
-    if(commits.exists()):
+
+    commits = models.Commit.objects.all().order_by('-timestamp')
+    if (commits.exists()):
         latest_commit = commits[0]
         print(latest_commit)
     else:
-        latest_commit=None
+        latest_commit = None
 
-    l=[]
+    l = []
     next_url = commits_url
-    while(True):
-        r=requests.get(next_url,auth=(user, token))
+    while (True):
+        r = requests.get(next_url, auth=(user, token))
         page = r.json()
 
         l.extend(page)  # Add objects from page to our list
-        
-        # Github returns commits ordered by latest timestamp. 
+
+        # Github returns commits ordered by latest timestamp.
         # So, if page contains latest commit present on our system, then stop process
         # because, later commits must be already present in our system
-        if(latest_commit):
-            if( is_obj_in_page(latest_commit, page) ):
+        if (latest_commit):
+            if (is_obj_in_page(latest_commit, page)):
                 break
 
         n = len(page)
@@ -63,14 +66,14 @@ def refresh_leaderboard_commits(id):
         next_url = find_next(r.headers['link'])
         if next_url is None:
             break
-    
+
     # print(l[:2])
     updated = 0
-    if(r.status_code == 200):
+    if (r.status_code == 200):
         # print(l[0])
         for x in l:
-            if(models.CommitRecord.objects.filter(nodeid=x['node_id']).exists() ):
-                continue # skip if commit object already exists
+            if (models.Commit.objects.filter(nodeid=x['node_id']).exists()):
+                continue  # skip if commit object already exists
             u = User.objects.filter(github_username=x['commit']['author']['name'])
             if u.exists():
                 u = u.first()
@@ -79,7 +82,7 @@ def refresh_leaderboard_commits(id):
                 # OR
                 # continue # don't save commits made by users which doesn't exists on our system
 
-            models.CommitRecord.objects.create(
+            models.Commit.objects.create(
                 leaderboard=leaderboard,
                 user=u,
                 nodeid=x['node_id'],
@@ -87,9 +90,8 @@ def refresh_leaderboard_commits(id):
                 url=x['url'],
                 html_url=x['html_url'],
                 timestamp=x['commit']['author']['date'],
-                )
+            )
             updated += 1
-        return {"total":len(l), 'new': updated}
-    
+        return {"total": len(l), 'new': updated}
+
     return False
-    
