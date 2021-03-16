@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <body>
+        <h1>
+            This page will be the landing page once a user is logged in.
+            The information below is all the data the page will need
+        </h1>
+        <pre>
+            message:
+            {% if message %}
+                {% message %}
+            {% else %}
+                EMPTY
+            {% endif %}
+
+            Owned Leaderboards:
+            {% if owned_leaderboards %}
+                {% owned_leaderboards %}
+            {% else %}
+                EMPTY
+            {% endif %}
+            
+            Member Leaderboards:
+            {% if member_leaderboars %}
+                {% member_leaderboards %}
+            {% else %}
+                EMPTY
+            {% endif %}
+        </pre>
+    </body>
+{% endblock content %}
