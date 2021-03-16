@@ -34,11 +34,11 @@ def refresh_leaderboard_commits(id):
     commits = models.CommitRecord.objects.all().order_by('-timestamp')
     if(commits.exists()):
         latest_commit = commits[0]
-        print(latest_commit)
+        # print(latest_commit)
     else:
         latest_commit=None
 
-    l=[]
+    l=[] # List for storing commit objects
     next_url = commits_url
     while(True):
         r=requests.get(next_url,auth=(user, token))
