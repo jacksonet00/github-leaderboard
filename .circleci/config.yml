@@ -1,19 +1,32 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
-version: 2.1
-
+version: 2
 jobs:
   build:
+    working_directory: ~/app
     docker:
-      - image: circleci/node:12.19.0
-
-    working_directory: ~/repo
-
+      - image: circleci/python:3.8
+        environment:
+          DATABASE_URL: postgres://eWDMyJvaNvrojGhbMHKzTTFHWViTaPKV:JVpTGUPoSEoq2Syz5MM1V6OLhWmAgWZUKJ4uiH0Vl4o6zyHIti4JpgbBuCDW8F6Q@postgres:5432/github_leaderboard
+      - image: circleci/postgres:12.3
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
     steps:
       - checkout
-      - run: npm install mocha
-      - run: npm install
-      - run: 
-          command: npm start
-          background: true
-      - run: npm test
-      
+      - restore_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements/local.txt" }}
+      - run:
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements/local.txt
+      - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements/local.txt" }}
+          paths:
+            - "venv"
+      - run:
+          command: |
+            . venv/bin/activate
+            pytest
+      - store_artifacts:
+          path: test-reports/
+          destination: github_leaderboard
