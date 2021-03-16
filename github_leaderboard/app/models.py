@@ -18,10 +18,10 @@ class Result(models.Model):
 
 
 class Leaderboard(models.Model):
-    def default_start_datetime():
+    def default_start_datetime(self):
         return dt.datetime.now()
 
-    def default_end_datetime():
+    def default_end_datetime(self):
         return dt.datetime.now() + dt.timedelta(days=7)
 
     name = models.CharField(max_length=255)
@@ -39,19 +39,6 @@ class Leaderboard(models.Model):
 
 
 class Commit(models.Model):
-    def default_commit_count(self):
-        return 0
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    commit_count = models.IntegerField(default=default_commit_count)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_modified = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.user}: {self.commit_count} commits"
-
-
-class CommitRecord(models.Model):
     leaderboard = models.ForeignKey('Leaderboard', on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     nodeid = models.CharField(max_length=100)

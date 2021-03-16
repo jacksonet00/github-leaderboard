@@ -53,7 +53,6 @@ WSGI_APPLICATION = "config.wsgi.application"
 # APPS
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
-    "djcelery", # Django Celery for scheduled tasks
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
