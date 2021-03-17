@@ -2,10 +2,9 @@ from django.db import models
 from github_leaderboard.users.models import User
 import datetime as dt
 
-
 # Create your models here.
 class Result(models.Model):
-    def default_score(self):
+    def default_score():
         return 0
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -15,7 +14,6 @@ class Result(models.Model):
 
     def __str__(self):
         return f"{self.user}: {self.score} points"
-
 
 class Leaderboard(models.Model):
     def default_start_datetime():
@@ -36,9 +34,8 @@ class Leaderboard(models.Model):
     def __str__(self):
         return self.name
 
-
 class Commit(models.Model):
-    def default_commit_count(self):
+    def default_commit_count():
         return 0
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
