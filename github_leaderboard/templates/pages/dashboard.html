@@ -9,21 +9,21 @@
         <pre>
             message:
             {% if message %}
-                {% message %}
+                {{ message }}
             {% else %}
                 EMPTY
             {% endif %}
 
             Owned Leaderboards:
             {% if owned_leaderboards %}
-                {% owned_leaderboards %}
+                {{ owned_leaderboards }}
             {% else %}
                 EMPTY
             {% endif %}
-            
+
             Member Leaderboards:
             {% if member_leaderboars %}
-                {% member_leaderboards %}
+                {{ member_leaderboards }}
             {% else %}
                 EMPTY
             {% endif %}

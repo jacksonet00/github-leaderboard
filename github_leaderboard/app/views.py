@@ -12,10 +12,11 @@ def home(request):
 
 def dashboard(request):
     ''' View for the dashboard page of the website '''
-    template = loader.get_template('pages/dashboard.html')
+    #template = loader.get_template('pages/dashboard.html')
+    template = 'pages/dashboard.html'
     if request.method == 'GET':
-        context = dasboard_context(request)
-        return render(template.render(context, request))
+        ctx = dashboard_context(request)
+        return render(request, template, context=ctx)
     elif request.method == 'POST':
         return http501('POST not yet implemented')
     elif request.method == 'DELETE':
@@ -37,7 +38,7 @@ def dashboard_context(request):
     if request.user.is_authenticated:
         owned_leaderboards = Leaderboard.objects.filter(owner=request.user)
         member_leaderboards = {} # TODO: Need to make this possible with models
-        message = f"Hello {user.name}"
+        message = f"Hello {request.user.name}"
     else:
         owned_leaderboards = {}
         member_leaderboards = {}
@@ -56,9 +57,3 @@ def http501(message):
     response = HttpResponse(message)
     response.status_code = 501
     return response
-
-def test_http501():
-    msg = "TEST"
-    resp = http501(msg)
-    assert resp.content = msg
-    assert resp.status_code = 501
