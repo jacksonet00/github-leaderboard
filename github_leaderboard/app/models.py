@@ -18,10 +18,10 @@ class Result(models.Model):
 
 
 class Leaderboard(models.Model):
-    def default_start_datetime(self):
+    def default_start_datetime():
         return dt.datetime.now()
 
-    def default_end_datetime(self):
+    def default_end_datetime():
         return dt.datetime.now() + dt.timedelta(days=7)
 
     name = models.CharField(max_length=255)
