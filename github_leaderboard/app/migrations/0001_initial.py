@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='Result',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('score', models.IntegerField(default=app.models.Result.default_score)),
+                ('score', models.IntegerField(default=github_leaderboard.app.models.Result.default_score)),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
                 ('date_modified', models.DateTimeField(auto_now=True)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
@@ -29,8 +29,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255)),
-                ('start', models.DateTimeField(default=app.models.Leaderboard.default_start_datetime)),
-                ('end', models.DateTimeField(default=app.models.Leaderboard.default_end_datetime)),
+                ('start', models.DateTimeField(default=github_leaderboard.app.models.Leaderboard.default_start_datetime)),
+                ('end', models.DateTimeField(default=github_leaderboard.app.models.Leaderboard.default_end_datetime)),
                 ('repo_url', models.URLField(blank=True, null=True)),
                 ('access_token', models.CharField(blank=True, max_length=255, null=True, unique=True)),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
@@ -56,6 +56,6 @@ class Migration(migrations.Migration):
                                                   to='app.leaderboard')),
                 ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
                                            to=settings.AUTH_USER_MODEL)),
-            ],
+           ],
         ),
     ]
