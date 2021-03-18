@@ -8,7 +8,7 @@ request.user won't be AnonymousUser. Otherwise, it will cause exception
 
 def admin_only(function):
     def wrap(request, *args, **kwargs):
-        if (request.user.role == "ADMIN"):
+        if request.user.role == "ADMIN":
             return function(request, *args, **kwargs)
         else:
             raise PermissionDenied("You are not authorized.")
@@ -19,7 +19,7 @@ def admin_only(function):
 
 def dev_only(function):
     def wrap(request, *args, **kwargs):
-        if (request.user.role == "DEV"):
+        if request.user.role == "DEV":
             return function(request, *args, **kwargs)
         else:
             raise PermissionDenied("You are not authorized.")
@@ -30,7 +30,7 @@ def dev_only(function):
 
 def admin_or_dev_only(function):
     def wrap(request, *args, **kwargs):
-        if (request.user.role == "ADMIN" or request.user.role == "DEV"):
+        if request.user.role == "ADMIN" or request.user.role == "DEV":
             return function(request, *args, **kwargs)
         else:
             raise PermissionDenied("You are not authorized.")

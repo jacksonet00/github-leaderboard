@@ -35,7 +35,7 @@ def refresh_leaderboard_commits(id):
     # commits_url = 'https://api.github.com/repos/jacksonet00/github-leaderboard/commits'
 
     commits = models.Commit.objects.all().order_by('-timestamp')
-    if (commits.exists()):
+    if commits.exists():
         latest_commit = commits[0]
         # print(latest_commit)
     else:
@@ -43,7 +43,7 @@ def refresh_leaderboard_commits(id):
 
     l = []
     next_url = commits_url
-    while (True):
+    while True:
         r = requests.get(next_url, auth=(user, token))
         page = r.json()
 
@@ -69,10 +69,10 @@ def refresh_leaderboard_commits(id):
 
     # print(l[:2])
     updated = 0
-    if (r.status_code == 200):
+    if r.status_code == 200:
         # print(l[0])
         for x in l:
-            if (models.Commit.objects.filter(nodeid=x['node_id']).exists()):
+            if models.Commit.objects.filter(nodeid=x['node_id']).exists():
                 continue  # skip if commit object already exists
             u = User.objects.filter(github_username=x['commit']['author']['name'])
             if u.exists():

@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     path('', views.home),
-    path('leaderboard/<int:id>/refresh', views.fetch_leaderboard_commits.as_view()),
+    path('leaderboard/<int:id>/refresh', views.FetchLeaderboardCommits.as_view()),
 ]
