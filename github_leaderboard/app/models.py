@@ -4,6 +4,7 @@ from django.db import models
 
 from github_leaderboard.users.models import User
 
+
 # Create your models here.
 class Result(models.Model):
     def default_score():
@@ -16,6 +17,7 @@ class Result(models.Model):
 
     def __str__(self):
         return f"{self.user}: {self.score} points"
+
 
 class Leaderboard(models.Model):
     def default_start_datetime():
@@ -36,6 +38,7 @@ class Leaderboard(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Commit(models.Model):
     leaderboard = models.ForeignKey('Leaderboard', on_delete=models.CASCADE, null=True, blank=True)
