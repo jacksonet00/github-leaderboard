@@ -1,6 +1,8 @@
-from django.db import models
-from github_leaderboard.users.models import User
 import datetime as dt
+
+from django.db import models
+
+from github_leaderboard.users.models import User
 
 
 # Create your models here.
