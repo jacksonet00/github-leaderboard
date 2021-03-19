@@ -47,5 +47,17 @@ class DashboardViewTests(TestCase):
         response = views.dashboard(request)
         assert response.status_code == 200
 
-
+    def test_dashboard_context(self):
+        ''' Test the dashboard_context function '''
+        # Setup
+        ldb = github_leaderboard.app.models.Leaderboard()
+        ldb.name = 'test_leaderboard'
+        ldb.owner = self.user
+        request = self.factory.get(self.URL)
+        request.user = self.user
+        # Call function
+        context = views.dashboard_context(request)
+        print(context)
+        assert ldb in context['owned_leaderboards']
+        assert context['message'] == f"Hello {self.user.name}!"
 
