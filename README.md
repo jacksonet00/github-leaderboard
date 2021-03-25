@@ -92,6 +92,11 @@ with `alias docker_django="docker-compose -f local.yml run --rm django python ma
 
 2. Log in through the admin panel
 
+### Run Django pytest in containers
+```bash
+docker-compose -f local.yml run --rm django pytest
+```
+
 ### Adding github auth
 
 1. Go to admin page and add a "social application"
