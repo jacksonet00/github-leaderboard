@@ -103,11 +103,17 @@ with `alias docker_django="docker-compose -f local.yml run --rm django python ma
 
 2. Log in through the admin panel
 
-### Adding github auth
+### Adding github Oath
 
-1. Go to admin page and add a "social application"
+[This link contains info on how to add github oath to any project.](https://kodnito.com/posts/django-authentication-github/) Since we have a lot of the "stuff" already, we don't need to follow all the steps.
 
-2. Add the client id and secret key from the Discord into the social application with provider github.
+1. Go to admin page
+
+2. Go to "Sites" and modify the site so the domain name is your whatever your domain name is. For development change it to `localhost:8000`. This is important for Oath.
+
+3. Go to "Social Applications"
+
+4. Add the client id and secret key from the Discord into the social application with provider github. This key is configured so the domainname is `localhost:8000`. If you are not developing, add a Github key with your domain name.
 
 ## Project Design Documentation
 
