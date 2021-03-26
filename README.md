@@ -14,6 +14,17 @@ Docker. `github_leaderboard` contains all the Django files that you would modify
 
 ### Setup docker environment from our project dependencies
 
+To avoid adding `sudo` to every command on Linux, you have to add docker to your user group. This is important for dockers to work for some reason, Django doesn't run otherwise You also need to remember to start and enable the docker service. [Here's the command for Arch Linux/Manjaro.](https://linuxconfig.org/manjaro-linux-docker-installation)
+
+```bash
+sudo pacman -Syu
+sudo pacman -S docker docker-compose
+sudo systemctl start docker.service
+sudo systemctl enable docker.service
+sudo usermod -aG docker $USER
+reboot
+```
+
 1. Build the docker containers
 
    ```bash
