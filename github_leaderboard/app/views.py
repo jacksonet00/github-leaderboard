@@ -12,7 +12,6 @@ def home(request):
 
 def dashboard(request):
     ''' View for the dashboard page of the website '''
-    #template = loader.get_template('pages/dashboard.html')
     template = 'pages/dashboard.html'
     if request.method == 'GET':
         ctx = dashboard_context(request)
