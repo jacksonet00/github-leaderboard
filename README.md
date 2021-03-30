@@ -14,17 +14,6 @@ Docker. `github_leaderboard` contains all the Django files that you would modify
 
 ### Setup docker environment from our project dependencies
 
-To avoid adding `sudo` to every command on Linux, you have to add docker to your user group. This is important for dockers to work for some reason, Django doesn't run otherwise You also need to remember to start and enable the docker service. [Here's the command for Arch Linux/Manjaro.](https://linuxconfig.org/manjaro-linux-docker-installation)
-
-```bash
-sudo pacman -Syu
-sudo pacman -S docker docker-compose
-sudo systemctl start docker.service
-sudo systemctl enable docker.service
-sudo usermod -aG docker $USER
-reboot
-```
-
 1. Build the docker containers
 
    ```bash
@@ -103,17 +92,16 @@ with `alias docker_django="docker-compose -f local.yml run --rm django python ma
 
 2. Log in through the admin panel
 
-### Adding github Oath
+### Run Django pytest in containers
+```bash
+docker-compose -f local.yml run --rm django pytest
+```
 
-[This link contains info on how to add github oath to any project.](https://kodnito.com/posts/django-authentication-github/) Since we have a lot of the "stuff" already, we don't need to follow all the steps.
+### Adding github auth
 
-1. Go to admin page
+1. Go to admin page and add a "social application"
 
-2. Go to "Sites" and modify the site so the domain name is your whatever your domain name is. For development change it to `localhost:8000`. This is important for Oath.
-
-3. Go to "Social Applications"
-
-4. Add the client id and secret key from the Discord into the social application with provider github. This key is configured so the domainname is `localhost:8000`. If you are not developing, add a Github key with your domain name.
+2. Add the client id and secret key from the Discord into the social application with provider github.
 
 ## Project Design Documentation
 

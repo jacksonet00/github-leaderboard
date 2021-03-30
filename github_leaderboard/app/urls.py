@@ -1,8 +1,8 @@
 from django.urls import path
-
 from . import views
 
 urlpatterns = [
     path('', views.home),
-    path('leaderboard/<int:id>/refresh', views.FetchLeaderboardCommits.as_view()),
+    path('dashboard', views.dashboard),
+    path('delete/<int:pk>', views.leaderboard_delete)
 ]
