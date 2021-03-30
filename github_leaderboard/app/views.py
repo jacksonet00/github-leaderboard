@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.template import loader
 from django.views import View
+from django.shortcuts import get_object_or_404
 
 from github_leaderboard.app.models import Leaderboard
 from github_leaderboard.users.models import User
+from github_leaderboard.app.forms import CreateLeaderboardForm
 
 # Create your views here.
 def home(request):
@@ -17,11 +19,38 @@ def dashboard(request):
         ctx = dashboard_context(request)
         return render(request, template, context=ctx)
     elif request.method == 'POST':
-        return http501('POST not yet implemented')
-    elif request.method == 'DELETE':
-        return http501('DELETE not yet implemented')
+        return dashboard_post(request)
     else:
         raise Http404('HTTP method not defined on this page')
+
+def leaderboard_delete(request, pk=None):
+    ''' Special view for deleting leaderboards from across the site 
+    
+        kwargs:
+            id -- a leaderboard id (primary key)
+    '''
+    template = 'pages/deleteLeaderboard.html'
+    if pk is not None and request.user.is_authenticated:
+        leaderboard = get_object_or_404(Leaderboard, id=pk)
+        if leaderboard.owner == request.user:
+            leaderboard.delete()
+            msg = f'Leaderboard {leaderboard.name} deleted'
+            ctx = {'message' : msg}
+            return render(request, template, context=ctx)
+    return render(request, "403.html")
+
+
+def dashboard_post(request):
+    ''' Handles POST for dashboard view '''
+    template = 'pages/dashboard.html'
+    form = CreateLeaderboardForm(request.POST)
+    if form.is_valid():
+        Leaderboard.objects.create(**form.cleaned_data, owner=request.user)
+        return render(request, template, context=dashboard_context(request))
+    else:
+        ctx = dashboard_context(request)
+        ctx['creation_form'] = form # Send it back with error messages
+        return render(request, template, context=ctx)
 
 def dashboard_context(request):
     ''' Returns a context dictionary for the dashboard view
@@ -38,15 +67,15 @@ def dashboard_context(request):
         owned_leaderboards = Leaderboard.objects.filter(owner=request.user)
         member_leaderboards = {} # TODO: Need to make this possible with models
         message = f"Hello {request.user.name}"
+        creation_form = CreateLeaderboardForm()
+        context = {
+            'owned_leaderboards': owned_leaderboards,
+            'member_leaderboards': member_leaderboards,
+            'message': message,
+            'creation_form': creation_form
+        }
     else:
-        owned_leaderboards = {}
-        member_leaderboards = {}
-        message = "Please login!"
-    context = {
-        'owned_leaderboards': owned_leaderboards,
-        'member_leaderboards': member_leaderboards,
-        'message': message
-    }
+        context = {'message' : "Please login!"}
     return context
 
 def http501(message):
