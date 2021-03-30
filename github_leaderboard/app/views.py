@@ -27,7 +27,7 @@ def leaderboard_delete(request, pk=None):
     ''' Special view for deleting leaderboards from across the site 
     
         kwargs:
-            id -- a leaderboard id (primary key)
+            pk -- a leaderboard id (primary key)
     '''
     template = 'pages/deleteLeaderboard.html'
     if pk is not None and request.user.is_authenticated:
