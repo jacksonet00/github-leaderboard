@@ -74,7 +74,8 @@ def refresh_leaderboard_commits(id):
         for x in l:
             if (models.Commit.objects.filter(nodeid=x['node_id']).exists()):
                 continue  # skip if commit object already exists
-            u = User.objects.filter(github_username=x['commit']['author']['name'])
+            # u = User.objects.filter(github_username=x['commit']['author']['name'])
+            u = User.objects.filter(github_username=x['author']['login'])
             if u.exists():
                 u = u.first()
             else:

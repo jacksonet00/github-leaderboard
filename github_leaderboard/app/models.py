@@ -33,6 +33,7 @@ class Leaderboard(models.Model):
     results = models.ForeignKey(Result, blank=True, null=True, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
+    participants = models.ManyToManyField(User,blank=True, related_name="leaderboards_participated")
 
     def __str__(self):
         return self.name

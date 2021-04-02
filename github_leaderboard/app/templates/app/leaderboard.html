@@ -1,5 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+            <h2 class="card-title text-center ">Leaderboard : {{leaderboard.name}}</h2>
+            <p class="card-text col">({{leaderboard.start.date}} - {{leaderboard.end.date}})</p>
 
+            <p class="card-text col">github repo link: <a target="_blank" href="{{leaderboard.repo_url}}">{{leaderboard.repo_url}}</a></p>
+            <p class="card-text col">Owner : {{leaderboard.owner}}   </p>
+            <a href="{% url 'leaderboard_refresh' id=leaderboard.id %}" class="btn btn-primary">Refresh</a>
+
+            {% if request.user == leaderboard.owner %}
+            <a href="{% url 'manage_leaderboard_participants' id=leaderboard.id %}" class="btn btn-primary">Manage Participant</a>
+            {% endif %}
+
+        </div>
+
+        <div class="card-body">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Rank</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Commits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in entries %}
+                    <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <!-- <td>{{entry.0}}</td>
+                        <td>{{entry.1}}</td> -->
+                        <td>{{entry.user__github_username}}</td>
+                        <td>{{entry.total}}</td>
+                    </tr>
+                    {% endfor %}
+
+                    {% for entry in users_without_commit %}
+                    <tr>
+                        <th scope="row">-</th>
+                        <td>{{entry.username}}</td>
+                        <td>0</td>
+                        <!-- <td>{{entry.user__github_username}}</td>
+                        <td>{{entry.total}}</td> -->
+                    </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
 {% endblock content %}
