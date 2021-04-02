@@ -1,11 +1,13 @@
-from django.db import models
-from github_leaderboard.users.models import User
 import datetime as dt
+
+from django.db import models
+
+from github_leaderboard.users.models import User
 
 
 # Create your models here.
 class Result(models.Model):
-    def default_score(self):
+    def default_score():
         return 0
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -18,10 +20,10 @@ class Result(models.Model):
 
 
 class Leaderboard(models.Model):
-    def default_start_datetime(self):
+    def default_start_datetime():
         return dt.datetime.now()
 
-    def default_end_datetime(self):
+    def default_end_datetime():
         return dt.datetime.now() + dt.timedelta(days=7)
 
     name = models.CharField(max_length=255)

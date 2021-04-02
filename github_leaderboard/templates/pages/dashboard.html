@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <body>
+        <h2>
+            {{ message }}
+        </h2>
+        <pre>
+            message:
+            {% if message %}
+                {{ message }}
+            {% else %}
+                EMPTY
+            {% endif %}
+
+            Owned Leaderboards:
+            {% if owned_leaderboards %}
+                {{ owned_leaderboards }}
+            {% else %}
+                EMPTY
+            {% endif %}
+
+            Member Leaderboards:
+            {% if member_leaderboars %}
+                {{ member_leaderboards }}
+            {% else %}
+                EMPTY
+            {% endif %}
+        </pre>
+
+        {# Table of Owned Leaderboards and delete buttons #}
+        <div>
+            <h3>Owned Leaderboards</h3>
+
+                <table class="table">
+                    <thead>
+                        <th scope="col">Name</th>
+                        <th scope="col">Rank</th>
+                        <th scope="col"></th>
+                    </thead>
+                    <tbody>
+                        {% for ldb in owned_leaderboards %}
+                        <tr>
+                            <td>
+                                {{ ldb.name }}
+                            </td>
+                            <td>
+                                {# To do #}
+                                #
+                            </td>
+                            <td>
+                                <a class="btn btn-danger" href="/app/delete/{{ldb.id}}">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+
+        <div class="text-light bg-dark">
+            <h2>Create a Leaderboard</h2>
+            <form action="/app/dashboard" method="POST">
+                {% csrf_token %}
+                {{ creation_form.as_ul }}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </body>
+{% endblock content %}
