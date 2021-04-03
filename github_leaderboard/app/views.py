@@ -29,7 +29,6 @@ from github_leaderboard.app.forms import CreateLeaderboardForm
 def home(request):
     return render(request, 'pages/home.html')  # This is the same page as before but it's just a stand in
 
-<<<<<<< HEAD
 class fetch_leaderboard_commits(View):
     ''' preserve Order of application of Decorators. '''
     @method_decorator(login_required)
@@ -127,7 +126,6 @@ class fetch_commits_from_all_public_repo(View):
         # leaderboard = get_object_or_404(models.Leaderboard, id=id)
         return render(request, "app/fetch_commits_from_all_repo.html")
         
-=======
 def dashboard(request):
     ''' View for the dashboard page of the website '''
     template = 'pages/dashboard.html'
@@ -201,4 +199,3 @@ def http501(message):
     response = HttpResponse(message)
     response.status_code = 501
     return response
->>>>>>> 97f16cf22d04aa7db9ba290af0a191b16f7243a7
