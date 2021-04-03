@@ -34,6 +34,10 @@ class fetch_leaderboard_commits(View):
     @method_decorator(login_required)
     # @method_decorator(decorators.admin_only) # This will only allow admins to access this method
     def get(self, request, id):
+        leaderboard = get_object_or_404(models.Leaderboard, id=id)
+        if(leaderboard.closed):
+            messages.error(self.request, "Leaderboard is closed. operation aborted." )
+            return redirect('leaderboard', id=id)
         success = methods.refresh_leaderboard_commits(id)
         if(success != False):
             # return redirect('leaderboard', kwargs={"id":id})
@@ -42,7 +46,7 @@ class fetch_leaderboard_commits(View):
             return redirect('leaderboard', id=id)
             # return JsonResponse({'success':True, 'new': success['new'], 'total':success['total'] })
         else:
-            messages.success(self.request, "unexpected error occured" )
+            messages.error(self.request, "unexpected error occured" )
             return redirect('leaderboard', id=id)
             # return JsonResponse({'success':False})
 
@@ -65,8 +69,18 @@ class leaderboard(View):
             "leaderboard":leaderboard,
             "entries":entries,
             "users_without_commit":users_without_commit,
+
+            # "combined": 
         }
         return render(request, "app/leaderboard.html", context)
+
+@method_decorator(login_required, name='dispatch')
+class close_leaderboard_if_ended(View):
+    def get(self, request, id):
+        leaderboard = get_object_or_404(models.Leaderboard, id=id)
+        leaderboard.close_if_ended()
+        return redirect('leaderboard', id=id)
+
 
 @method_decorator(login_required, name='dispatch')
 class manage_leaderboard_participants(View):
@@ -91,6 +105,11 @@ class manage_leaderboard_participants(View):
             messages.error(request, 'leaderboard does not exists')
             return redirect('manage_leaderboard_participants', id=id)
         
+        if(leaderboard.closed):
+            messages.error(request, 'cant add participant of closed leaderboard')
+            return redirect('manage_leaderboard_participants', id=id)
+        
+
         if(user in leaderboard.participants.all()):
             messages.error(request, 'user is already a participant in this leaderboard')
             return redirect('manage_leaderboard_participants', id=id)
@@ -113,6 +132,9 @@ class delete_leaderboard_participants(View):
             leaderboard = get_object_or_404(models.Leaderboard, id=id)
         except:
             messages.error(request, 'leaderboard does not exists')
+            return redirect('manage_leaderboard_participants', id=id)
+        if(leaderboard.closed):
+            messages.error(request, 'cant remove participant of closed leaderboard')
             return redirect('manage_leaderboard_participants', id=id)
         
         leaderboard.participants.remove(user)

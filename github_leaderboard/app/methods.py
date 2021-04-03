@@ -27,6 +27,9 @@ def is_obj_in_page(o, page):
 
 def refresh_leaderboard_commits(id):
     leaderboard = get_object_or_404(models.Leaderboard, id=id)
+    if(leaderboard.closed):
+        return False
+    
     url_str = leaderboard.repo_url.replace('https://github.com/', '').strip("/")
 
     user = leaderboard.owner.github_username

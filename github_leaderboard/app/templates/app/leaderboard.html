@@ -4,15 +4,26 @@
 <div class="container">
     <div class="card text-center">
         <div class="card-header">
-            <h2 class="card-title text-center ">Leaderboard : {{leaderboard.name}}</h2>
+
+            <h2 class="card-title text-center ">Leaderboard : {{leaderboard.name}}
+            </h2>
+            {% if leaderboard.closed %}
+            <span class="badge badge-pill badge-danger">Closed</span>
+            {% else %}
+            <span class="badge badge-pill badge-success">Active</span>
+            {% endif %}
+
             <p class="card-text col">({{leaderboard.start.date}} - {{leaderboard.end.date}})</p>
 
-            <p class="card-text col">github repo link: <a target="_blank" href="{{leaderboard.repo_url}}">{{leaderboard.repo_url}}</a></p>
-            <p class="card-text col">Owner : {{leaderboard.owner}}   </p>
+            <p class="card-text col">github repo link: <a target="_blank"
+                    href="{{leaderboard.repo_url}}">{{leaderboard.repo_url}}</a></p>
+            <p class="card-text col">Owner : {{leaderboard.owner}} </p>
             <a href="{% url 'leaderboard_refresh' id=leaderboard.id %}" class="btn btn-primary">Refresh</a>
 
-            {% if request.user == leaderboard.owner %}
-            <a href="{% url 'manage_leaderboard_participants' id=leaderboard.id %}" class="btn btn-primary">Manage Participant</a>
+            {% if request.user == leaderboard.owner and not leaderboard.closed %}
+            <a href="{% url 'manage_leaderboard_participants' id=leaderboard.id %}" class="btn btn-primary">Manage
+                Participant</a>
+            <a href="{% url 'close_leaderboard_if_ended' id=leaderboard.id %}" class="btn btn-primary">Close if Ended</a>
             {% endif %}
 
         </div>
@@ -46,7 +57,7 @@
                         <td>{{entry.total}}</td> -->
                     </tr>
                     {% endfor %}
-                    
+
                 </tbody>
             </table>
 
