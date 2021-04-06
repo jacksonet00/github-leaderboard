@@ -60,7 +60,7 @@ def refresh_leaderboard_commits(id):
                 break
 
         n = len(page)
-        print(n)
+        # print(n)
         if n == 0:
             break
         link = response.headers.get('link')

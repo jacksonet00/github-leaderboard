@@ -55,16 +55,17 @@ class Leaderboard(models.Model):
     '''
     Comment this method if you want to edit the leaderboard during development 
     '''    
-    def save(self, *args, **kwargs):
-        print(self.initial_closed) # value before save
-        print(self.closed)  # value after save
-        if(self.initial_closed == False):   # if leaderboard is not closed before current save
-            super(Leaderboard, self).save(*args, **kwargs)
-        else: # if leaderboard is already closed before current save
-            raise ValueError("Updating closed leaderboard is not allowed")
+    # def save(self, *args, **kwargs):
+    #     print(self.initial_closed) # value before save
+    #     print(self.closed)  # value after save
+    #     if(self.initial_closed == False):   # if leaderboard is not closed before current save
+    #         super(Leaderboard, self).save(*args, **kwargs)
+    #     else: # if leaderboard is already closed before current save
+    #         raise ValueError("Updating closed leaderboard is not allowed")
     
     # update leaderboard commit data from repo
     def refresh(self):
+        print("Refreshing Leaderboard " + str(self.name) + " Data")
         success = methods.refresh_leaderboard_commits(self.id)
         return success # example success={'total': 12, 'new': 0} or success=False
 
@@ -84,14 +85,11 @@ class Leaderboard(models.Model):
         # ranked_data, users_without_commit = (<QuerySet [{'user__github_username': 'leeg8', 'total': 5}, {'user__github_username': 'awhigham9', 'total': 3}, {'user__github_username': 'jacksonet00', 'total': 3}, {'user__github_username': 'f0lie', 'total': 1}]>, [<User: admin>])
 
     def close_if_ended(self):
-        self.refresh() # fetch latest commit data from repo
         if(self.closed == False):
-            utc=pytz.UTC
-            today = utc.localize(datetime.now()) 
-            print(today > self.end)
-            print(today)
-            print(self.end)
+            today = pytz.UTC.localize(datetime.now()) 
             if( today > self.end ):
+                print('Closing leaderboard ' + str(self.name))
+                self.refresh() # fetch latest commit data from repo before closing
                 ranked_data, users_without_commit = self.get_ranked_user_commit_data()
                 for entry in ranked_data:
                     user = User.objects.get(github_username = entry['user__github_username'])
@@ -102,6 +100,7 @@ class Leaderboard(models.Model):
 
                 self.closed=True
                 self.save()
+                print('leaderboard ' + str(self.name) + " closed successfully.")
         # else:
         #     raise ValueError("closing of already closed leaderboard is not allowed")
             

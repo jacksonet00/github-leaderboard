@@ -24,6 +24,7 @@ from django.shortcuts import get_object_or_404
 from github_leaderboard.app.models import Leaderboard
 from github_leaderboard.users.models import User
 from github_leaderboard.app.forms import CreateLeaderboardForm
+from . import scheduled_tasks
 
 # Create your views here.
 def home(request):
