@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <h1>
+            GitHub Leaderboard
+        </h1>
+        {# Message at the top #}
+        <h2>
+            {{ message }}
+        </h2>
+        <pre>
+            {# Move content out of this pretag when its real format is implemented #}
+            Member Leaderboards:
+            {% if member_leaderboars %}
+                {{ member_leaderboards }}
+            {% else %}
+                EMPTY
+            {% endif %}
+        </pre>
+
+        {# Table of Owned Leaderboards and delete buttons #}
+        <div>
+            <h3>Owned Leaderboards</h3>
+
+                <table class="table">
+                    <thead>
+                        <th scope="col">Name</th>
+                        <th scope="col">Rank</th>
+                        <th scope="col"></th>
+                    </thead>
+                    <tbody>
+                        {% for ldb in owned_leaderboards %}
+                        <tr>
+                            <td>
+                                {{ ldb.name }}
+                            </td>
+                            <td>
+                                {# To do #}
+                                #
+                            </td>
+                            <td>
+                                <a class="btn btn-danger" href="/app/delete/{{ldb.id}}">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+
+        {# Leaderboard Creation Form #}
+        <div class="text-light bg-dark">
+            <h2>Create a Leaderboard</h2>
+            <form action="/app/dashboard" method="POST">
+                {% csrf_token %}
+                {{ creation_form.as_ul }}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        
+{% endblock content %}

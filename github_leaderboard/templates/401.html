@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Unauthorized (401){% endblock %}
+
+{% block content %}
+    <h1>Unauthorized (401)</h1>
+
+    <p>
+        {% if exception %}
+            {{ exception }}
+        {% else %}
+            You're not properly authenticated.
+            <a href="{% url 'account_login' %}" class="link-primary">Please login!</a>
+        {% endif %}
+    </p>
+{% endblock content %}
