@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.template import loader
 from django.views import View
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import PermissionDenied
 
 from github_leaderboard.app.models import Leaderboard
 from github_leaderboard.users.models import User
@@ -15,6 +16,8 @@ def home(request):
 def dashboard(request):
     ''' View for the dashboard page of the website '''
     template = 'pages/dashboard.html'
+    if not request.user.is_authenticated:
+        return Http401NotAuthenticated(request) 
     if request.method == 'GET':
         ctx = dashboard_context(request)
         return render(request, template, context=ctx)
@@ -83,8 +86,7 @@ def dashboard_context(request):
                 'message': message to be displayed
             }
     '''
-    logged_in = request.user.is_authenticated
-    if logged_in:
+    if request.user.is_authenticated:
         owned_leaderboards = Leaderboard.objects.filter(owner=request.user)
         member_leaderboards = {} # TODO: Need to make this possible with models
         message = f"Hello {request.user.name}"
@@ -94,19 +96,19 @@ def dashboard_context(request):
             'member_leaderboards': member_leaderboards,
             'message': message,
             'creation_form': creation_form,
-            'logged_in': logged_in
         }
+        return context
     else:
-        context = {
-            'message' : "Please login!",
-            'logged_in': logged_in
-        }
-    return context
+        raise PermissionDenied
 
-def http501(message):
+def Http501NotImplemented(message):
     ''' Returns a HTTP Response 501 Not Implemented
         with message as content
     '''
     response = HttpResponse(message)
     response.status_code = 501
     return response
+
+def Http401NotAuthenticated(request):
+    ''' Return the 401 page telling the user to login '''
+    return render(request, "401.html")
