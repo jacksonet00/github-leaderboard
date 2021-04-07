@@ -160,7 +160,7 @@ def dashboard(request):
     ''' View for the dashboard page of the website '''
     template = 'pages/dashboard.html'
     if not request.user.is_authenticated:
-        return Http401NotAuthenticated(request) 
+        return Http401NotAuthenticated(request)
     if request.method == 'GET':
         ctx = dashboard_context(request)
         return render(request, template, context=ctx)
@@ -171,8 +171,8 @@ def dashboard(request):
 
 
 def leaderboard_delete(request, pk=None):
-    ''' Special view for deleting leaderboards from across the site 
-    
+    ''' Special view for deleting leaderboards from across the site
+
         kwargs:
             pk -- a leaderboard id (primary key)
     '''
@@ -246,7 +246,7 @@ def dashboard_context(request):
     else:
         raise PermissionDenied
 
-def Http501NotImplemented(message):
+def Http501(message):
     ''' Returns a HTTP Response 501 Not Implemented
         with message as content
     '''

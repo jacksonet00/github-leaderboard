@@ -62,4 +62,3 @@ INSTALLED_APPS += ["django_extensions"]  # noqa F405
 
 # Your stuff...
 # ------------------------------------------------------------------------------
-AUTO_UPDATE_LEADERBOARD = False

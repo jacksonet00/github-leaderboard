@@ -11,7 +11,7 @@ import github_leaderboard.app.models
 # Create your tests here.
 def test_http501():
     msg = "TEST"
-    resp = views.http501(msg)
+    resp = views.Http501(msg)
     assert resp.content == bytes(msg, 'utf-8')
     assert resp.status_code == 501
 

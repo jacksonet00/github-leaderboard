@@ -282,4 +282,4 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 # Our Project
 EXECUTION_INTERVAL = 10  # Number of seconds after which the leaderboard update task is executed again.
-
+AUTO_UPDATE_LEADERBOARD = False
