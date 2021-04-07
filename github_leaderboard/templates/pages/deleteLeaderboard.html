@@ -1,7 +1,22 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <p>{{ message }}</p>
+{# Page where an authorized user can delete a leaderboard #}
 
-    <a class="btn" href="/app/dashboard">Back to the dashboard!</a>
+{% block content %}
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+
+    {% if success %}
+        <p>Leaderboard {{ ldb_name }} successfully deleted!</p>
+    {% elif prompt %}
+        <p class="text-danger">Would you like to delete leaderboard {{ ldb_name }}?</p>
+        {# Triggers POST request for deletion #}
+        <form method="POST">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger" name="deleteButton" value="Yes, Delete It">
+        </form>
+    {% endif %}
+
+    <a class="btn btn-primary" href="/app/dashboard">Back to the dashboard!</a>
 {% endblock content %}

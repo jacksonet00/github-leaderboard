@@ -33,9 +33,29 @@ def leaderboard_delete(request, pk=None):
     if pk is not None and request.user.is_authenticated:
         leaderboard = get_object_or_404(Leaderboard, id=pk)
         if leaderboard.owner == request.user:
-            leaderboard.delete()
-            msg = f'Leaderboard {leaderboard.name} deleted'
-            ctx = {'message' : msg}
+            ctx = {}
+            success = False
+            msg = ''
+            if request.method == "POST":
+                try:
+                    leaderboard.delete()
+                except Exception as e:
+                    msg = f'An error occured when trying to delete {leaderboard.name}'
+                    msg += '\n' + str(e)
+                    ctx['message'] = msg
+                    prompt = False
+                else:
+                    success = True
+                    prompt = False
+            else:
+                prompt = True
+            ctx = {
+                'message' : msg,
+                'prompt': prompt,
+                'success': success,
+                'pk': pk,
+                'ldb_name': leaderboard.name
+            }
             return render(request, template, context=ctx)
     return render(request, "403.html")
 

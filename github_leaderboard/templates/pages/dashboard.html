@@ -2,24 +2,15 @@
 
 {% block content %}
     <body>
+        <h1>
+            GitHub Leaderboard
+        </h1>
+        {# Message at the top #}
         <h2>
             {{ message }}
         </h2>
         <pre>
-            message:
-            {% if message %}
-                {{ message }}
-            {% else %}
-                EMPTY
-            {% endif %}
-
-            Owned Leaderboards:
-            {% if owned_leaderboards %}
-                {{ owned_leaderboards }}
-            {% else %}
-                EMPTY
-            {% endif %}
-
+            {# Move content out of this pretag when its real format is implemented #}
             Member Leaderboards:
             {% if member_leaderboars %}
                 {{ member_leaderboards }}
@@ -59,6 +50,7 @@
                 </table>
         </div>
 
+        {# Leaderboard Creation Form #}
         <div class="text-light bg-dark">
             <h2>Create a Leaderboard</h2>
             <form action="/app/dashboard" method="POST">
