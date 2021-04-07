@@ -149,13 +149,6 @@ class delete_leaderboard_participants(View):
         return redirect('manage_leaderboard_participants', id=id)
 
 
-@method_decorator(login_required, name='dispatch')
-class fetch_commits_from_all_public_repo(View):
-    def get(self, request, id):
-        # leaderboard = get_object_or_404(models.Leaderboard, id=id)
-        return render(request, "app/fetch_commits_from_all_repo.html")
-
-
 def dashboard(request):
     ''' View for the dashboard page of the website '''
     template = 'pages/dashboard.html'
