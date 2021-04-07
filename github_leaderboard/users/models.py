@@ -3,6 +3,11 @@ from django.db.models import CharField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+USER_ROLES = (
+    ("ADMIN", "ADMIN"),
+    ("DEV", "DEV"),
+    ("USER", "USER"),
+)
 
 class User(AbstractUser):
     """Default user for Github Leaderboard."""
@@ -13,6 +18,8 @@ class User(AbstractUser):
     github_key = CharField(max_length=255, unique=True, blank=True, null=True)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
+
+    role = CharField(max_length=20, choices=USER_ROLES, default="ADMIN")
 
     def get_absolute_url(self):
         """Get url for user's detail view.

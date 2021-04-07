@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title text-center ">Manage Participants</h2>
+            <a href="{% url 'leaderboard' id=leaderboard.id %}" class="btn btn-info mb-2 mx-2">Go to Leaderboard Page</a>
+        </div>
+
+        <div class="card-body">
+            <form class="form-inline" method="POST">
+                {% csrf_token %}
+                <div class="form-group mb-2">
+                    <label for="staticEmail2" class="sr-only">Email</label>
+                    <input type="text" class="form-control" id="username" name="username"
+                        value="" placeholder="username">
+                </div>
+                <button type="submit" class="btn btn-primary mb-2 mx-2">Add Participant</button>
+            </form>
+
+
+            <table class="table  table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Username</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in leaderboard.participants.all %}
+                    <tr>
+                        <td>{{entry.github_username}}</td>
+                        <td>
+                            <a href="{% url 'delete_leaderboard_participants' id=leaderboard.id userid=entry.id %}">remove</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
