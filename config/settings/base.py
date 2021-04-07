@@ -74,7 +74,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "github_leaderboard.users.apps.UsersConfig",
     # Your stuff: custom apps go here
-    "github_leaderboard.app.apps.AppConfig"
+    "github_leaderboard.app.apps.AppConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -238,7 +238,7 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-                      "%(process)d %(thread)d %(message)s"
+            "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
@@ -271,15 +271,17 @@ SOCIALACCOUNT_ADAPTER = "github_leaderboard.users.adapters.SocialAccountAdapter"
 # ==============================================================================
 # django-celery Settings
 # ------------------------------------------------------------------------------
-BROKER_URL = 'amqp://'
-CELERY_ACCEPT_CONTENT = ['pickle']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+BROKER_URL = "amqp://"
+CELERY_ACCEPT_CONTENT = ["pickle"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+CELERY_RESULT_BACKEND = "djcelery.backends.database:DatabaseBackend"
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 # ==============================================================================
 
 # Our Project
-EXECUTION_INTERVAL = 10  # Number of seconds after which the leaderboard update task is executed again.
+EXECUTION_INTERVAL = (
+    10  # Number of seconds after which the leaderboard update task is executed again.
+)
 AUTO_UPDATE_LEADERBOARD = False

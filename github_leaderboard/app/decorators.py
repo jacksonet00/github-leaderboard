@@ -1,9 +1,9 @@
 from django.core.exceptions import PermissionDenied
 
-'''
+"""
 Plese apply 'login_required' decorator before these decorators to ensure that
 request.user won't be AnonymousUser. Otherwise, it will cause exception
-'''
+"""
 
 
 def admin_only(function):

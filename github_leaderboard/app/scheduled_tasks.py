@@ -1,7 +1,8 @@
 import threading
-from . import models
+
 from django.conf import settings
 
+from . import models
 
 # ================================================
 # Method to run task to close ended leaderboards
@@ -9,16 +10,19 @@ from django.conf import settings
 
 
 def close_ended_leaderboards():
-    print('leaderboard closing task thread - Started')
-    leaderboards = models.Leaderboard.objects.filter(closed=False)  # Only open leaderboards
+    print("leaderboard closing task thread - Started")
+    leaderboards = models.Leaderboard.objects.filter(
+        closed=False
+    )  # Only open leaderboards
     for leaderboard in leaderboards:
         leaderboard.close_if_ended()
-    print('leaderboard closing task thread - Finished')
+    print("leaderboard closing task thread - Finished")
 
 
 # ================================================
 # Thread Class to close ended leaderboards
 # ================================================
+
 
 class LeaderboardCloseTaskThread(threading.Thread):
     def __init__(self, event):
