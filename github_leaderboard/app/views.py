@@ -83,7 +83,8 @@ def dashboard_context(request):
                 'message': message to be displayed
             }
     '''
-    if request.user.is_authenticated:
+    logged_in = request.user.is_authenticated
+    if logged_in:
         owned_leaderboards = Leaderboard.objects.filter(owner=request.user)
         member_leaderboards = {} # TODO: Need to make this possible with models
         message = f"Hello {request.user.name}"
@@ -92,10 +93,14 @@ def dashboard_context(request):
             'owned_leaderboards': owned_leaderboards,
             'member_leaderboards': member_leaderboards,
             'message': message,
-            'creation_form': creation_form
+            'creation_form': creation_form,
+            'logged_in': logged_in
         }
     else:
-        context = {'message' : "Please login!"}
+        context = {
+            'message' : "Please login!",
+            'logged_in': logged_in
+        }
     return context
 
 def http501(message):
