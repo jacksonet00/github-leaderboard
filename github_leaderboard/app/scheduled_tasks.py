@@ -1,11 +1,11 @@
 import threading
 from . import models
+from django.conf import settings
+
 
 # ================================================
 # Method to run task to close ended leaderboards
 # ================================================
-
-EXECUTION_INTERVAL = 10  # Number of seconds after which the task is executed again.
 
 
 def close_ended_leaderboards():
@@ -26,15 +26,15 @@ class LeaderboardCloseTaskThread(threading.Thread):
         self.stopped = event
 
     def run(self):
-        while not self.stopped.wait(EXECUTION_INTERVAL):
+        while not self.stopped.wait(settings.EXECUTION_INTERVAL):
             close_ended_leaderboards()
 
 
 stopFlag = threading.Event()
 thread = LeaderboardCloseTaskThread(stopFlag)
 
-# Uncomment below line to start auto fetch thread
-thread.start()
+if settings.AUTO_UPDATE_LEADERBOARD:
+    thread.start()
 
 # ============================================================================
 # Alternate Approach
