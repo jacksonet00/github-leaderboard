@@ -27,9 +27,9 @@ def is_obj_in_page(o, page):
 
 def refresh_leaderboard_commits(id):
     leaderboard = get_object_or_404(models.Leaderboard, id=id)
-    if(leaderboard.closed):
+    if (leaderboard.closed):
         return False
-    
+
     url_str = leaderboard.repo_url.replace('https://github.com/', '').strip("/")
 
     user = leaderboard.owner.github_username
@@ -78,7 +78,8 @@ def refresh_leaderboard_commits(id):
             if models.Commit.objects.filter(nodeid=commit['node_id']).exists():
                 continue  # skip if commit object already exists
             # u = User.objects.filter(github_username=x['commit']['author']['name'])
-            user = User.objects.filter(github_username=commit['author']['login']) # corrected to get github username instead of full name
+            user = User.objects.filter(
+                github_username=commit['author']['login'])  # corrected to get github username instead of full name
             if user.exists():
                 user = user.first()
             else:

@@ -7,6 +7,7 @@ from github_leaderboard.users.models import User
 import github_leaderboard.app.views as views
 import github_leaderboard.app.models
 
+
 # Create your tests here.
 def test_http501():
     msg = "TEST"
@@ -14,8 +15,8 @@ def test_http501():
     assert resp.content == bytes(msg, 'utf-8')
     assert resp.status_code == 501
 
-class DashboardViewTests(TestCase):
 
+class DashboardViewTests(TestCase):
     URL = 'app/dashboard'
 
     # TODO: something about self.user is broken
@@ -48,4 +49,3 @@ class DashboardViewTests(TestCase):
         # Get Response
         response = views.dashboard(request)
         assert response.status_code == 200
-
