@@ -12,8 +12,8 @@ given a link header from github, find the link for the next url which they use f
 
 
 def find_next(link):
-    for l in link.split(","):
-        a, b = l.split(";")
+    for link in link.split(","):
+        a, b = link.split(";")
         if b.strip() == 'rel="next"':
             return a.strip()[1:-1]
 

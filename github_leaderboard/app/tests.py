@@ -1,5 +1,3 @@
-from django.contrib.auth.models import AnonymousUser
-from django.http import HttpRequest
 from django.test import Client, RequestFactory, TestCase
 
 import github_leaderboard.app.models
@@ -10,7 +8,7 @@ from github_leaderboard.users.models import User
 # Create your tests here.
 def test_http501():
     msg = "TEST"
-    resp = views.Http501(msg)
+    resp = views.http501(msg)
     assert resp.content == bytes(msg, "utf-8")
     assert resp.status_code == 501
 

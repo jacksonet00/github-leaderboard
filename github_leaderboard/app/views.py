@@ -1,31 +1,26 @@
 import logging
 
-import requests
-from django.contrib.auth import get_user_model
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
-
-from . import methods, models
-
-User = get_user_model()
-logger = logging.getLogger(__name__)
-
+from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
-from django.http import Http404, HttpResponse, HttpResponseNotFound
-from django.shortcuts import get_object_or_404, render
-from django.template import loader
+from django.http import Http404, HttpResponse, HttpResponseNotAllowed
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 
 from github_leaderboard.app.forms import CreateLeaderboardForm
 from github_leaderboard.app.models import Leaderboard
-from github_leaderboard.users.models import User
 
-from . import decorators, scheduled_tasks
+from . import methods, models, scheduled_tasks
+
+if settings.AUTO_UPDATE_LEADERBOARD:
+    scheduled_tasks.LEADERBOARD_UPDATE_THREAD.start()
+
+User = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 # Create your views here.
@@ -46,7 +41,7 @@ class fetch_leaderboard_commits(View):
             messages.error(self.request, "Leaderboard is closed. operation aborted.")
             return redirect("leaderboard", id=id)
         success = methods.refresh_leaderboard_commits(id)
-        if success != False:
+        if success:
             # return redirect('leaderboard', kwargs={"id":id})
             msg = str(success["new"]) + " records updated"
             messages.success(self.request, msg)
@@ -160,7 +155,7 @@ def dashboard(request):
     """ View for the dashboard page of the website """
     template = "pages/dashboard.html"
     if not request.user.is_authenticated:
-        return Http401NotAuthenticated(request)
+        return HttpResponseNotAllowed(request)
     if request.method == "GET":
         ctx = dashboard_context(request)
         return render(request, template, context=ctx)
@@ -247,7 +242,7 @@ def dashboard_context(request):
         raise PermissionDenied
 
 
-def Http501(message):
+def http501(message):
     """Returns a HTTP Response 501 Not Implemented
     with message as content
     """

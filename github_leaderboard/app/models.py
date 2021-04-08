@@ -1,16 +1,14 @@
 import datetime as dt
 from datetime import datetime
 
+import pytz
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Count
 
-from github_leaderboard.users.models import User
-
 from . import methods
 
 User = get_user_model()
-import pytz
 
 
 # Create your models here.
@@ -35,7 +33,7 @@ class Result(models.Model):
 
     def save(self, *args, **kwargs):
         if self.leaderboard:
-            if self.leaderboard.closed == True:
+            if self.leaderboard.closed:
                 raise ValueError(
                     "Updating results of closed leaderboard is not allowed"
                 )
@@ -103,10 +101,9 @@ class Leaderboard(models.Model):
                 users_without_commit.append(user)
 
         return ranked_data, users_without_commit
-        # ranked_data, users_without_commit = (<QuerySet [{'user__github_username': 'leeg8', 'total': 5}, {'user__github_username': 'awhigham9', 'total': 3}, {'user__github_username': 'jacksonet00', 'total': 3}, {'user__github_username': 'f0lie', 'total': 1}]>, [<User: admin>])
 
     def close_if_ended(self):
-        if self.closed == False:
+        if not self.closed:
             today = pytz.UTC.localize(datetime.now())
             if today > self.end:
                 print("Closing leaderboard " + str(self.name))
@@ -152,7 +149,7 @@ class Commit(models.Model):
 
     def save(self, *args, **kwargs):
         if self.leaderboard:
-            if self.leaderboard.closed == True:
+            if self.leaderboard.closed:
                 raise ValueError(
                     "Updating commits of closed leaderboard is not allowed"
                 )

@@ -35,10 +35,7 @@ class LeaderboardCloseTaskThread(threading.Thread):
 
 
 stopFlag = threading.Event()
-thread = LeaderboardCloseTaskThread(stopFlag)
-
-if settings.AUTO_UPDATE_LEADERBOARD:
-    thread.start()
+LEADERBOARD_UPDATE_THREAD = LeaderboardCloseTaskThread(stopFlag)
 
 # ============================================================================
 # Alternate Approach
