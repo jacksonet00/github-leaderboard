@@ -9,6 +9,7 @@ USER_ROLES = (
     ("USER", "USER"),
 )
 
+
 class User(AbstractUser):
     """Default user for Github Leaderboard."""
 

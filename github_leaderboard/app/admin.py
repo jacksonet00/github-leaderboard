@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Result, Leaderboard, Commit
+from .models import Commit, Leaderboard, Result
 
 # Register your models here.
 
