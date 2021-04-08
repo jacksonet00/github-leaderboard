@@ -79,7 +79,7 @@ class leaderboard(View):
 
             # "combined":
         }
-        return render(request, "app/leaderboard.html", context)
+        return render(request, "pages/leaderboard.html", context)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -97,7 +97,7 @@ class manage_leaderboard_participants(View):
         context = {
             "leaderboard": leaderboard,
         }
-        return render(request, "app/manage_participant.html", context)
+        return render(request, "pages/manage_participant.html", context)
 
     def post(self, request, id):
         username = request.POST['username']
