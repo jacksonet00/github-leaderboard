@@ -105,13 +105,13 @@ class manage_leaderboard_participants(View):
         username = request.POST["username"]
         try:
             user = User.objects.get(username=username)
-        except:
+        except User.DoesNotExist:
             messages.error(request, "user does not exists")
             return redirect("manage_leaderboard_participants", id=id)
 
         try:
             leaderboard = get_object_or_404(models.Leaderboard, id=id)
-        except:
+        except models.Leaderboard.DoesNotExist:
             messages.error(request, "leaderboard does not exists")
             return redirect("manage_leaderboard_participants", id=id)
 
@@ -133,13 +133,13 @@ class delete_leaderboard_participants(View):
     def get(self, request, id, userid):
         try:
             user = User.objects.get(id=userid)
-        except:
+        except User.DoesNotExist:
             messages.error(request, "user does not exists")
             return redirect("manage_leaderboard_participants", id=id)
 
         try:
             leaderboard = get_object_or_404(models.Leaderboard, id=id)
-        except:
+        except models.Leaderboard.DoesNotExist:
             messages.error(request, "leaderboard does not exists")
             return redirect("manage_leaderboard_participants", id=id)
         if leaderboard.closed:
@@ -229,7 +229,7 @@ def dashboard_context(request):
     if request.user.is_authenticated:
         owned_leaderboards = Leaderboard.objects.filter(owner=request.user)
         member_leaderboards = {}  # TODO: Need to make this possible with models
-        message = f"Hello {request.user.name}"
+        message = f"Hello {request.user.username}"
         creation_form = CreateLeaderboardForm()
         context = {
             "owned_leaderboards": owned_leaderboards,
