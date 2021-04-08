@@ -8,38 +8,38 @@
             <div class="card-header"><h2 class="card-title text-center"> GitHub Leaderboard </h2></div>
             <p class="card-text col">
                 Member Leaderboards:
-                {% if member_leaderboars %}
+                {% if member_leaderboards %}
                     {{ member_leaderboards }}
                 {% else %}
                     EMPTY
                 {% endif %}
             </p>
-        </div>
 
-        {# Table of Owned Leaderboards and delete buttons #}
-        <div>
-            <div class="card-body">
-                <table class="table table-dark">
-                    <thead>
-                    <tr>
-                        <th scope="col">Owned Board</th>
-                        <th scope="col">Rank</th>
-                        <th scope="col"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for ldb in owned_leaderboards %}
+            {# Table of Owned Leaderboards and delete buttons #}
+            <div>
+                <div class="card-body">
+                    <table class="table table-dark">
+                        <thead>
                         <tr>
-                            <td> {{ ldb.name }} </td>
-                            <td> {# To do #} #</td>
-                            <td><a class="btn btn-danger" href="/app/delete/{{ ldb.id }}"> Delete </a></td>
+                            <th scope="col">Owned Board</th>
+                            <th scope="col">Rank</th>
+                            <th scope="col"></th>
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {% for ldb in owned_leaderboards %}
+                            <tr>
+                                <td> {{ ldb.name }} </td>
+                                <td> {# To do #} #</td>
+                                <td><a class="btn btn-danger" href="/app/delete/{{ ldb.id }}"> Delete </a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        {% crispy creation_form %}
+            {% crispy creation_form %}
+        </div>
     </div>
 {% endblock content %}

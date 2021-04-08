@@ -99,7 +99,7 @@ class manage_leaderboard_participants(View):
         context = {
             "leaderboard": leaderboard,
         }
-        return render(request, "manage_participant.html", context)
+        return render(request, "pages/manage_participant.html", context)
 
     def post(self, request, id):
         username = request.POST["username"]
