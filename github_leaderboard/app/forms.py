@@ -1,6 +1,6 @@
-from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Column
+from crispy_forms.layout import Column, Layout, Submit
+from django import forms
 
 from github_leaderboard.app.models import Leaderboard
 
