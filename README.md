@@ -10,7 +10,6 @@ Important locations are `config` which contains top level information about Djan
 installed apps. `requirements` contain the Python packages that Docker uses. `compose` is for
 Docker. `github_leaderboard` contains all the Django files that you would modify.
 
-`db_sql_files` is for Jackson. They contain the SQL schema that he made.
 
 ### Setup docker environment from our project dependencies
 
