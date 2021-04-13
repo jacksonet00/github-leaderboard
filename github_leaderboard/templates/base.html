@@ -65,6 +65,12 @@
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
             </li>
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+              {# Links to the users dashboard #}
+              <a class="nav-link" href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+            </li>
+            {% endif %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'about' %}">About</a>
             </li>
