@@ -228,7 +228,7 @@ def dashboard_context(request):
     """
     if request.user.is_authenticated:
         owned_leaderboards = Leaderboard.objects.filter(owner=request.user)
-        member_leaderboards = {}  # TODO: Need to make this possible with models
+        member_leaderboards = Leaderboard.objects.filter(participants=request.user)
         message = f"Hello {request.user.username}"
         creation_form = CreateLeaderboardForm()
         context = {
