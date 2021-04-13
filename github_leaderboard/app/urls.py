@@ -27,12 +27,12 @@ urlpatterns = [
     ),
     path(
         "dashboard",
-        views.dashboard
+        views.dashboard,
         name="dashboard"    
     ),
     path(
         "delete/<int:pk>",
-        views.leaderboard_delete
+        views.leaderboard_delete,
         name="delete_leaderboard"
     ),
 ]
