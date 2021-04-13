@@ -6,14 +6,6 @@
     <div class="container">
         <div class="card text-center">
             <div class="card-header"><h2 class="card-title text-center"> GitHub Leaderboard </h2></div>
-            <p class="card-text col">
-                Member Leaderboards:
-                {% if member_leaderboards %}
-                    {{ member_leaderboards }}
-                {% else %}
-                    EMPTY
-                {% endif %}
-            </p>
 
             {# Table of Owned Leaderboards and delete buttons #}
             <div>
@@ -38,6 +30,28 @@
                     </table>
                 </div>
             </div>
+
+            {# Table of Leaderboards which the user is a member of #}
+            <div>
+                <div class="card-body">
+                    <table class="table table-dark">
+                        <thead>
+                        <tr>
+                            <th scope="col">Leaderboard</th>
+                            <th scope="col">Rank</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ldb in member_leaderboards %}
+                            <tr>
+                                <td> <a href="{% url 'leaderboard' id=ldb.id %}" class="link-primary">{{ ldb.name }}</a> </td>
+                                <td> {# To do #} #</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
 
             {% crispy creation_form %}
         </div>
