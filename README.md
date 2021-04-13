@@ -10,7 +10,17 @@ Important locations are `config` which contains top level information about Djan
 installed apps. `requirements` contain the Python packages that Docker uses. `compose` is for
 Docker. `github_leaderboard` contains all the Django files that you would modify.
 
-`db_sql_files` is for Jackson. They contain the SQL schema that he made.
+### Setup pre-commit hooks
+
+This runs pre-commit before you commit with flake8 and black autoformatting. If you have flake8 errors,
+the code will fail to commit.
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install pre-commit
+pre-commit install
+```
 
 ### Setup docker environment from our project dependencies
 
