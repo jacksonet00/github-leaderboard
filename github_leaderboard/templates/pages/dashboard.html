@@ -7,53 +7,70 @@
         <div class="card text-center">
             <div class="card-header"><h2 class="card-title text-center"> GitHub Leaderboard </h2></div>
 
-            {# Table of Owned Leaderboards and delete buttons #}
-            <div>
-                <div class="card-body">
-                    <table class="table table-dark">
-                        <thead>
-                        <tr>
-                            <th scope="col">Owned Board</th>
-                            <th scope="col">Rank</th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for ldb in owned_leaderboards %}
-                            <tr>
-                                <td> <a href="{% url 'leaderboard' id=ldb.id %}" class="link-primary">{{ ldb.name }}</a> </td>
-                                <td> {# To do #} #</td>
-                                <td><a class="btn btn-danger" href="/app/delete/{{ ldb.id }}"> Delete </a></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+            <div class="row align-items-center">
+                <div class="col">
+                    {# Table of Owned Leaderboards and delete buttons #}
+                    {% if owned_leaderboards %}
+                    <div>
+                        <div class="card-body">
+                            <table class="table table-dark">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Owned Board</th>
+                                    <th scope="col">Rank</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for ldb in owned_leaderboards %}
+                                    <tr>
+                                        <td> <a href="{% url 'leaderboard' id=ldb.id %}" class="link-primary">{{ ldb.name }}</a> </td>
+                                        <td> <span class="badge badge-success">#</span></td>
+                                        <td><a class="btn btn-danger" href="/app/delete/{{ ldb.id }}"> Delete </a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+        
+                    {# Table of Leaderboards which the user is a member of #}
+                    {% if member_leaderboards %}
+                    <div>
+                        <div class="card-body">
+                            <table class="table table-dark">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Leaderboard</th>
+                                    <th scope="col">Rank</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for ldb in member_leaderboards %}
+                                    <tr>
+                                        <td> <a href="{% url 'leaderboard' id=ldb.id %}" class="link-primary">{{ ldb.name }}</a> </td>
+                                        <td> <span class="badge badge-success">#</span></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}     
+                </div>
+
+                <div class="col">
+                    <div class="card-body">
+                        <div class="bg-dark border border-dark rounded">
+                            <div class="mx-auto mb-0 text-white">
+                                <h4>Create a leaderboard</h4>
+                                {% crispy creation_form %}
+                            </div> 
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            {# Table of Leaderboards which the user is a member of #}
-            <div>
-                <div class="card-body">
-                    <table class="table table-dark">
-                        <thead>
-                        <tr>
-                            <th scope="col">Leaderboard</th>
-                            <th scope="col">Rank</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for ldb in member_leaderboards %}
-                            <tr>
-                                <td> <a href="{% url 'leaderboard' id=ldb.id %}" class="link-primary">{{ ldb.name }}</a> </td>
-                                <td> {# To do #} #</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>            
-
-            {% crispy creation_form %}
         </div>
     </div>
 {% endblock content %}
