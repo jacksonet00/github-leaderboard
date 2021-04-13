@@ -229,6 +229,7 @@ def dashboard_context(request):
     if request.user.is_authenticated:
         owned_leaderboards = Leaderboard.objects.filter(owner=request.user)
         member_leaderboards = Leaderboard.objects.filter(participants=request.user)
+        member_leaderboards = member_leaderboards.difference(owned_leaderboards) # Remove duplicate elements
         message = f"Hello {request.user.username}"
         creation_form = CreateLeaderboardForm()
         context = {
