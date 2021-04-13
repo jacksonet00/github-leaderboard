@@ -223,19 +223,17 @@ def dashboard_context(request):
         {
             'owned_leaderboards': dict of leaderboards owned by user
             'member_leaderboards': dict of leaderboards user is member of
-            'message': message to be displayed
+            'creation_form': the leaderboard creation form
         }
     """
     if request.user.is_authenticated:
         owned_leaderboards = Leaderboard.objects.filter(owner=request.user)
         member_leaderboards = Leaderboard.objects.filter(participants=request.user)
         member_leaderboards = member_leaderboards.difference(owned_leaderboards) # Remove duplicate elements
-        message = f"Hello {request.user.username}"
         creation_form = CreateLeaderboardForm()
         context = {
             "owned_leaderboards": owned_leaderboards,
             "member_leaderboards": member_leaderboards,
-            "message": message,
             "creation_form": creation_form,
         }
         return context
