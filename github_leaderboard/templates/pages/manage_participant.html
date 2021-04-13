@@ -24,12 +24,14 @@
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">Username</th>
+                        <th scope="col">GitHub Username</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for entry in leaderboard.participants.all %}
                     <tr>
+                        <td>{{entry.username}}</td>
                         <td>{{entry.github_username}}</td>
                         <td>
                             <a href="{% url 'delete_leaderboard_participants' id=leaderboard.id userid=entry.id %}">remove</a>
