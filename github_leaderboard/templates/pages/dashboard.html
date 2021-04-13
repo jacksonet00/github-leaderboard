@@ -29,7 +29,7 @@
                         <tbody>
                         {% for ldb in owned_leaderboards %}
                             <tr>
-                                <td> {{ ldb.name }} </td>
+                                <td> <a href="{% url 'leaderboard' id=ldb.id %}" class="link-primary">{{ ldb.name }}</a> </td>
                                 <td> {# To do #} #</td>
                                 <td><a class="btn btn-danger" href="/app/delete/{{ ldb.id }}"> Delete </a></td>
                             </tr>
