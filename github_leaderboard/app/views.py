@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
-from django.http import Http404, HttpResponse, HttpResponseNotAllowed
+from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -155,7 +155,7 @@ def dashboard(request):
     """ View for the dashboard page of the website """
     template = "pages/dashboard.html"
     if not request.user.is_authenticated:
-        return HttpResponseNotAllowed(request)
+        return HttpResponseForbidden(render(request, "403.html"))
     if request.method == "GET":
         ctx = dashboard_context(request)
         return render(request, template, context=ctx)
@@ -199,7 +199,7 @@ def leaderboard_delete(request, pk=None):
                 "ldb_name": leaderboard.name,
             }
             return render(request, template, context=ctx)
-    return render(request, "403.html")
+    return HttpResponseForbidden(render(request, "403.html"))
 
 
 def dashboard_post(request):

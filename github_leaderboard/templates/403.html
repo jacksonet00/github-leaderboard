@@ -5,5 +5,12 @@
 {% block content %}
 <h1>Forbidden (403)</h1>
 
-<p>{% if exception %}{{ exception }}{% else %}You're not allowed to access this page.{% endif %}</p>
+<p>{% if exception %}
+        {{ exception }}
+    {% else %}
+        You're not allowed to access this page.
+        You may need to login.
+    {% endif %}
+</p>
+
 {% endblock content %}
