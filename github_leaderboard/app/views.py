@@ -58,8 +58,6 @@ class leaderboard(View):
         
         entries = models.Commit.objects.filter(leaderboard=leaderboard, user__in=leaderboard.participants.all()).values('user__github_username').annotate(total=Count('user')).order_by('-total')
         
-        # zero  = leaderboard.participants.filter(Count("commit_set")==0)
-        
         users_without_commit = []
         for user in leaderboard.participants.all():
             count = user.commit_set.filter(leaderboard=leaderboard).count()
@@ -93,6 +91,9 @@ class manage_leaderboard_participants(View):
         return render(request, "app/manage_participant.html", context)
     
     def post(self, request, id):
+        if('username' not in request.POST):
+            return HttpResponse("parameter username is required",status=400)
+        
         username = request.POST['username']
         try:
             user = User.objects.get(username=username)

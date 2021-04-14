@@ -16,7 +16,8 @@ urlpatterns = [
     path("users/", include("github_leaderboard.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
-    path("app/", include("github_leaderboard.app.urls"))
+    path("app/", include("github_leaderboard.app.urls")),
+    # path("api/", include("github_leaderboard.api.urls"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

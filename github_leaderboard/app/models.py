@@ -31,10 +31,12 @@ class Result(models.Model):
 
 class Leaderboard(models.Model):
     def default_start_datetime():
-        return dt.datetime.now()
+        today = pytz.UTC.localize(datetime.now()) 
+        return today
 
     def default_end_datetime():
-        return dt.datetime.now() + dt.timedelta(days=7)
+        today = pytz.UTC.localize(datetime.now()) 
+        return today + dt.timedelta(days=7)
 
     name = models.CharField(max_length=255)
     start = models.DateTimeField(default=default_start_datetime)
@@ -55,13 +57,13 @@ class Leaderboard(models.Model):
     '''
     Comment this method if you want to edit the leaderboard during development 
     '''    
-    # def save(self, *args, **kwargs):
-    #     print(self.initial_closed) # value before save
-    #     print(self.closed)  # value after save
-    #     if(self.initial_closed == False):   # if leaderboard is not closed before current save
-    #         super(Leaderboard, self).save(*args, **kwargs)
-    #     else: # if leaderboard is already closed before current save
-    #         raise ValueError("Updating closed leaderboard is not allowed")
+    def save(self, *args, **kwargs):
+        print(self.initial_closed) # value before save
+        print(self.closed)  # value after save
+        if(self.initial_closed == False):   # if leaderboard is not closed before current save
+            super(Leaderboard, self).save(*args, **kwargs)
+        else: # if leaderboard is already closed before current save
+            raise ValueError("Updating closed leaderboard is not allowed")
     
     # update leaderboard commit data from repo
     def refresh(self):

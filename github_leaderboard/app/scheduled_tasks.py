@@ -32,7 +32,7 @@ stopFlag = threading.Event()
 thread = LeaderboardCloseTaskThread(stopFlag)
 
 # Uncomment below line to start auto fetch thread
-thread.start()
+# thread.start()
 
 
 # ============================================================================
