@@ -1,10 +1,9 @@
 import datetime as dt
-from datetime import datetime
 
-import pytz
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Count
+from django.utils import timezone
 
 from . import methods
 
@@ -42,10 +41,10 @@ class Result(models.Model):
 
 class Leaderboard(models.Model):
     def default_start_datetime():
-        return dt.datetime.now()
+        return timezone.now()
 
     def default_end_datetime():
-        return dt.datetime.now() + dt.timedelta(days=7)
+        return timezone.now() + dt.timedelta(days=7)
 
     name = models.CharField(max_length=255)
     start = models.DateTimeField(default=default_start_datetime)
@@ -104,7 +103,7 @@ class Leaderboard(models.Model):
 
     def close_if_ended(self):
         if not self.closed:
-            today = pytz.UTC.localize(datetime.now())
+            today = timezone.now()
             if today > self.end:
                 print("Closing leaderboard " + str(self.name))
                 self.refresh()  # fetch latest commit data from repo before closing
