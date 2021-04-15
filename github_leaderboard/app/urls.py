@@ -1,9 +1,10 @@
 from django.urls import path
+from django.views.generic.base import TemplateView
 
 from . import views
 
 urlpatterns = [
-    path("", views.home),
+    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
         "leaderboard/<int:id>/refresh",
         views.FetchLeaderboardCommitsView.as_view(),
