@@ -25,14 +25,6 @@ urlpatterns = [
         views.delete_leaderboard_participants.as_view(),
         name="delete_leaderboard_participants",
     ),
-    path(
-        "dashboard",
-        views.dashboard,
-        name="dashboard"    
-    ),
-    path(
-        "delete/<int:pk>",
-        views.leaderboard_delete,
-        name="delete_leaderboard"
-    ),
+    path("dashboard", views.dashboard, name="dashboard"),
+    path("delete/<int:pk>", views.leaderboard_delete, name="delete_leaderboard"),
 ]
