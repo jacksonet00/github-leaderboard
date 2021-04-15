@@ -23,13 +23,6 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-# Create your views here.
-def home(request):
-    return render(
-        request, "pages/home.html"
-    )  # This is the same page as before but it's just a stand in
-
-
 class FetchLeaderboardCommitsView(View):
     """ preserve Order of application of Decorators. """
 
@@ -42,15 +35,12 @@ class FetchLeaderboardCommitsView(View):
             return redirect("leaderboard", id=id)
         success = methods.refresh_leaderboard_commits(id)
         if success:
-            # return redirect('leaderboard', kwargs={"id":id})
             msg = str(success["new"]) + " records updated"
             messages.success(self.request, msg)
             return redirect("leaderboard", id=id)
-            # return JsonResponse({'success':True, 'new': success['new'], 'total':success['total'] })
         else:
             messages.error(self.request, "unexpected error occured")
             return redirect("leaderboard", id=id)
-            # return JsonResponse({'success':False})
 
 
 @method_decorator(login_required, name="dispatch")
@@ -67,8 +57,6 @@ class LeaderboardView(View):
             .order_by("-total")
         )
 
-        # zero  = leaderboard.participants.filter(Count("commit_set")==0)
-
         users_without_commit = []
         for user in leaderboard.participants.all():
             count = user.commit_set.filter(leaderboard=leaderboard).count()
@@ -79,7 +67,6 @@ class LeaderboardView(View):
             "leaderboard": leaderboard,
             "entries": entries,
             "users_without_commit": users_without_commit,
-            # "combined":
         }
         return render(request, "pages/leaderboard.html", context)
 
