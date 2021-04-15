@@ -1,6 +1,7 @@
 import logging
 
 import requests
+from allauth.socialaccount.models import SocialToken
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
@@ -21,7 +22,9 @@ def refresh_leaderboard_commits(id):
     url_str = leaderboard.repo_url.replace("https://github.com/", "").strip("/")
 
     user = leaderboard.owner.github_username
-    token = leaderboard.access_token
+    token = SocialToken.objects.filter(
+        account__user=leaderboard.owner, account__provider="github"
+    ).values_list("token")[0][0]
     commits_url = "https://api.github.com/repos/" + url_str + "/commits"
 
     github_commits = models.Commit.objects.all().order_by("-timestamp")
