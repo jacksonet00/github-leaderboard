@@ -110,24 +110,25 @@ docker-compose -f local.yml run --rm django pytest
 ### Adding github auth
 
 [Follow this guide mostly. Scroll to the bottom half that explains adding github oath application.](https://kodnito.com/posts/django-authentication-github/)
+Do not use `localhost` for things. It breaks github redirect.
 
 1. Go your `Github` account and go to `Settings/Developer Settings`
 
 1. Go to `OAuth Apps` and click to `New OAuth App`
 
 1. Change `Application name` to something like `Git Leaderboards`.
- Change `Homepage url` to `http://localhost:8000`.
- Change `Authorization callback URL` to `http://localhost:8000/accounts/github/login/callback`.
+ Change `Homepage url` to `http://0.0.0.0:8000`.
+ Change `Authorization callback URL` to `http://0.0.0.0:8000/accounts/github/login/callback`.
 
     Clearly you can change all of this for the production environment. Do not add an additional `/` to the end of
     callback url or you will get an error.
 
 1. Save your `Cilent ID` and `Secret Key`. You need this for the Django app.
 
-1. Go to admin page at `localhost:8000/admin` or the production url.
+1. Go to admin page at `http://0.0.0.0:8000/admin` or the production url.
 
 1. Go to `Sites` and add your `Domain Name` and `Display Name` to match your settings.
- `Domain Name` could be `localhost:8000` and `Display Name` could be w/e for local development.
+ `Domain Name` could be `0.0.0.0:8000` and `Display Name` could be w/e for local development.
 
 1. Go to `Social Application` and click on `add`.
 
