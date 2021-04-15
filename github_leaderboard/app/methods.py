@@ -1,3 +1,5 @@
+import logging
+
 import requests
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
@@ -5,6 +7,8 @@ from django.shortcuts import get_object_or_404
 from . import models
 
 User = get_user_model()
+_NOT_FOUND_STRING = "Not Found"  # Constant
+logger = logging.getLogger(__name__)
 
 
 # TODO: add more an error that says if the github link does not exist
@@ -34,6 +38,14 @@ def refresh_leaderboard_commits(id):
         # Github pages are paginated, next url contains the next page to look at
         # If the next link doesn't exist, return null
         commits_url = response.links.get("next", {}).get("url", None)
+
+        # If the URL isn't found, continue
+        if (
+            "message" in response.json()
+            and response.json()["message"] == _NOT_FOUND_STRING
+        ):
+            logger.warning(f"GitHub API returned {_NOT_FOUND_STRING} at {commits_url}")
+            continue
 
         # Only add commits we don't have, if you do see the latest commit, exit early
         for commit in response.json():
