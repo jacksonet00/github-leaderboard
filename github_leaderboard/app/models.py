@@ -48,9 +48,7 @@ class Leaderboard(models.Model):
     start = models.DateTimeField(default=default_start_datetime)
     end = models.DateTimeField(default=default_end_datetime)
     repo_url = models.URLField(blank=True, null=True)
-    access_token = models.CharField(max_length=255, unique=True, blank=True, null=True)
     owner = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
-    # results = models.ForeignKey(Result, blank=True, null=True, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     participants = models.ManyToManyField(
