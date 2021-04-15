@@ -19,6 +19,7 @@ def refresh_leaderboard_commits(id):
     if leaderboard.closed:
         return False
 
+    # Use the leaderboard's token to access github
     token = SocialToken.objects.filter(
         account__user=leaderboard.owner, account__provider="github"
     ).values_list("token")[0][0]
@@ -36,6 +37,7 @@ def refresh_leaderboard_commits(id):
 
     github_commits = []
 
+    # Stop adding new commits when we see the latest commit of our table in github's response
     for commit in repo.get_commits():
         if not latest_commit or commit.sha != latest_commit.nodeid:
             github_commits.append(commit)
