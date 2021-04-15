@@ -6,17 +6,6 @@ from . import models
 
 User = get_user_model()
 
-"""
-given a link header from github, find the link for the next url which they use for pagination
-"""
-
-
-def find_next(link):
-    for link in link.split(","):
-        a, b = link.split(";")
-        if b.strip() == 'rel="next"':
-            return a.strip()[1:-1]
-
 
 # TODO: add more an error that says if the github link does not exist
 def refresh_leaderboard_commits(id):
@@ -29,36 +18,26 @@ def refresh_leaderboard_commits(id):
     user = leaderboard.owner.github_username
     token = leaderboard.access_token
     commits_url = "https://api.github.com/repos/" + url_str + "/commits"
-    # commits_url = 'https://api.github.com/repos/jacksonet00/github-leaderboard/commits'
 
     github_commits = models.Commit.objects.all().order_by("-timestamp")
     if github_commits.exists():
         latest_commit = github_commits[0]
-        # print(latest_commit)
     else:
         latest_commit = None
 
     github_commits = []
-    next_url = commits_url
-    # Github responses are paginated this removes the pages
-    while True:
-        response = requests.get(next_url, auth=(user, token))
-        page = response.json()
+    response = None
 
-        github_commits.extend(page)  # Add objects from page to our list
+    while commits_url:
+        response = requests.get(commits_url, auth=(user, token))
+        # Github pages are paginated, next url contains the next page to look at
+        # If the next link doesn't exist, return null
+        commits_url = response.links.get("next", {}).get("url", None)
 
-        # Github returns commits ordered by latest timestamp.
-        # So, if page contains latest commit present on our system, then stop process
-        # because, later commits must be already present in our system
-        if len(page) == 0:
-            break
-        if response.headers.get("link") is None:
-            break
-        next_url = find_next(response.headers["link"])
-        if next_url is None:
-            break
-        if latest_commit:
-            if latest_commit.nodeid in set(commit["node_id"] for commit in page):
+        for commit in response.json():
+            if commit["node_id"] != latest_commit.nodeid:
+                github_commits.append(commit)
+            else:
                 break
 
     updated = 0
@@ -66,18 +45,6 @@ def refresh_leaderboard_commits(id):
         for commit in github_commits:
             if models.Commit.objects.filter(nodeid=commit["node_id"]).exists():
                 continue  # skip if commit object already exists
-
-            """
-            user = User.objects.filter(
-                github_username=commit["author"]["login"]
-            )  # corrected to get github username instead of full name
-            if user.exists():
-                user = user.first()
-            else:
-                user = None  # save commit even if user(author) doesnot exist in our databse.
-                # OR
-                # continue # don't save commits made by users which doesn't exists on our system
-            """
 
             models.Commit.objects.create(
                 leaderboard=leaderboard,
