@@ -5,8 +5,6 @@ from django.db import models
 from django.db.models import Count
 from django.utils import timezone
 
-from . import methods
-
 User = get_user_model()
 
 
@@ -64,26 +62,9 @@ class Leaderboard(models.Model):
         super(Leaderboard, self).__init__(*args, **kwargs)
         self.initial_closed = self.closed  # remember initial value
 
-    """
-    Comment this method if you want to edit the leaderboard during development
-    """
-
-    # def save(self, *args, **kwargs):
-    #     print(self.initial_closed) # value before save
-    #     print(self.closed)  # value after save
-    #     if(self.initial_closed == False):   # if leaderboard is not closed before current save
-    #         super(Leaderboard, self).save(*args, **kwargs)
-    #     else: # if leaderboard is already closed before current save
-    #         raise ValueError("Updating closed leaderboard is not allowed")
-
-    # update leaderboard commit data from repo
-    def refresh(self):
-        print("Refreshing Leaderboard " + str(self.name) + " Data")
-        success = methods.refresh_leaderboard_commits(self.id)
-        return success  # example success={'total': 12, 'new': 0} or success=False
-
     def get_ranked_user_commit_data(self):
         # From the Commit table, filter out by the github_user of the participants, and return a count of the commits
+
         # Yes this is ugly don't @ me
         # Get the usernames of participants as a set
         user_set = set(
