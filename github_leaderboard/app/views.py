@@ -30,7 +30,7 @@ def home(request):
     )  # This is the same page as before but it's just a stand in
 
 
-class fetch_leaderboard_commits(View):
+class FetchLeaderboardCommitsView(View):
     """ preserve Order of application of Decorators. """
 
     @method_decorator(login_required)
@@ -54,7 +54,7 @@ class fetch_leaderboard_commits(View):
 
 
 @method_decorator(login_required, name="dispatch")
-class leaderboard(View):
+class LeaderboardView(View):
     def get(self, request, id):
         leaderboard = get_object_or_404(models.Leaderboard, id=id)
 
@@ -85,7 +85,7 @@ class leaderboard(View):
 
 
 @method_decorator(login_required, name="dispatch")
-class close_leaderboard_if_ended(View):
+class CloseLeaderboardIfEndedView(View):
     def get(self, request, id):
         leaderboard = get_object_or_404(models.Leaderboard, id=id)
         leaderboard.close_if_ended()
@@ -93,7 +93,7 @@ class close_leaderboard_if_ended(View):
 
 
 @method_decorator(login_required, name="dispatch")
-class manage_leaderboard_participants(View):
+class ManageLeaderboardParticipantsView(View):
     def get(self, request, id):
         leaderboard = get_object_or_404(models.Leaderboard, id=id)
         context = {
@@ -129,7 +129,7 @@ class manage_leaderboard_participants(View):
 
 
 @method_decorator(login_required, name="dispatch")
-class delete_leaderboard_participants(View):
+class DeleteLeaderboardParticipantsView(View):
     def get(self, request, id, userid):
         try:
             user = User.objects.get(id=userid)
