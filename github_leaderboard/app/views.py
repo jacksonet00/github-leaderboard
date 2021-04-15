@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count
 from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
@@ -47,26 +46,10 @@ class FetchLeaderboardCommitsView(View):
 class LeaderboardView(View):
     def get(self, request, id):
         leaderboard = get_object_or_404(models.Leaderboard, id=id)
-
-        entries = (
-            models.Commit.objects.filter(
-                leaderboard=leaderboard, user__in=leaderboard.participants.all()
-            )
-            .values("user__github_username")
-            .annotate(total=Count("user"))
-            .order_by("-total")
-        )
-
-        users_without_commit = []
-        for user in leaderboard.participants.all():
-            count = user.commit_set.filter(leaderboard=leaderboard).count()
-            if count == 0:
-                users_without_commit.append(user)
-
+        entries = leaderboard.get_ranked_user_commit_data()
         context = {
             "leaderboard": leaderboard,
             "entries": entries,
-            "users_without_commit": users_without_commit,
         }
         return render(request, "pages/leaderboard.html", context)
 

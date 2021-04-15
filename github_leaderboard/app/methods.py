@@ -31,21 +31,21 @@ def refresh_leaderboard_commits(id):
     commits_url = "https://api.github.com/repos/" + url_str + "/commits"
     # commits_url = 'https://api.github.com/repos/jacksonet00/github-leaderboard/commits'
 
-    commits = models.Commit.objects.all().order_by("-timestamp")
-    if commits.exists():
-        latest_commit = commits[0]
+    github_commits = models.Commit.objects.all().order_by("-timestamp")
+    if github_commits.exists():
+        latest_commit = github_commits[0]
         # print(latest_commit)
     else:
         latest_commit = None
 
-    commits = []
+    github_commits = []
     next_url = commits_url
     # Github responses are paginated this removes the pages
     while True:
         response = requests.get(next_url, auth=(user, token))
         page = response.json()
 
-        commits.extend(page)  # Add objects from page to our list
+        github_commits.extend(page)  # Add objects from page to our list
 
         # Github returns commits ordered by latest timestamp.
         # So, if page contains latest commit present on our system, then stop process
@@ -63,10 +63,11 @@ def refresh_leaderboard_commits(id):
 
     updated = 0
     if response.status_code == 200:
-        for commit in commits:
+        for commit in github_commits:
             if models.Commit.objects.filter(nodeid=commit["node_id"]).exists():
                 continue  # skip if commit object already exists
-            # u = User.objects.filter(github_username=x['commit']['author']['name'])
+
+            """
             user = User.objects.filter(
                 github_username=commit["author"]["login"]
             )  # corrected to get github username instead of full name
@@ -76,10 +77,11 @@ def refresh_leaderboard_commits(id):
                 user = None  # save commit even if user(author) doesnot exist in our databse.
                 # OR
                 # continue # don't save commits made by users which doesn't exists on our system
+            """
 
             models.Commit.objects.create(
                 leaderboard=leaderboard,
-                user=user,
+                user=commit["author"]["login"],
                 nodeid=commit["node_id"],
                 message=commit["commit"]["message"],
                 url=commit["url"],
@@ -87,6 +89,6 @@ def refresh_leaderboard_commits(id):
                 timestamp=commit["commit"]["author"]["date"],
             )
             updated += 1
-        return {"total": len(commits), "new": updated}
+        return {"total": len(github_commits), "new": updated}
 
     return False

@@ -43,21 +43,10 @@
                         <th scope="row">{{forloop.counter}}</th>
                         <!-- <td>{{entry.0}}</td>
                         <td>{{entry.1}}</td> -->
-                        <td>{{entry.user__github_username}}</td>
+                        <td>{{entry.user}}</td>
                         <td>{{entry.total}}</td>
                     </tr>
                     {% endfor %}
-
-                    {% for entry in users_without_commit %}
-                    <tr>
-                        <th scope="row">-</th>
-                        <td>{{entry.username}}</td>
-                        <td>0</td>
-                        <!-- <td>{{entry.user__github_username}}</td>
-                        <td>{{entry.total}}</td> -->
-                    </tr>
-                    {% endfor %}
-
                 </tbody>
             </table>
 

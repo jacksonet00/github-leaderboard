@@ -83,23 +83,27 @@ class Leaderboard(models.Model):
         return success  # example success={'total': 12, 'new': 0} or success=False
 
     def get_ranked_user_commit_data(self):
-        # users who have atleast one commit
-        ranked_data = (
-            Commit.objects.filter(leaderboard=self, user__in=self.participants.all())
-            .values("user__github_username")
+        # From the Commit table, filter out by the github_user of the participants, and return a count of the commits
+        # Yes this is ugly don't @ me
+        # Get the usernames of participants as a set
+        user_set = set(
+            entity[0]
+            for entity in self.participants.all().values_list("github_username")
+        )
+
+        # Only works for users with at least one commit
+        ranked_data = list(
+            Commit.objects.filter(leaderboard=self, user__in=user_set)
+            .values("user")
             .annotate(total=Count("user"))
             .order_by("-total")
         )
 
         # users who dont have any commit
-        users_without_commit = []  # list
-        for user in self.participants.all():
-            commit_count = user.commit_set.filter(leaderboard=self).count()
-            if commit_count == 0:
-                # only add users who dont have any commit data in database
-                users_without_commit.append(user)
+        for user in user_set.difference(set(entity["user"] for entity in ranked_data)):
+            ranked_data.append({"user": user, "total": 0})
 
-        return ranked_data, users_without_commit
+        return ranked_data
 
     def close_if_ended(self):
         if not self.closed:
@@ -133,8 +137,8 @@ class Commit(models.Model):
     leaderboard = models.ForeignKey(
         "Leaderboard", on_delete=models.CASCADE, null=True, blank=True
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    nodeid = models.CharField(max_length=100)
+    user = models.CharField(max_length=255, null=True)
+    nodeid = models.CharField(max_length=255)
     message = models.TextField()
     url = models.URLField()
     html_url = models.URLField()
