@@ -9,6 +9,7 @@ User = get_user_model()
 
 # TODO: add more an error that says if the github link does not exist
 def refresh_leaderboard_commits(id):
+    # Populates a leaderboard with commits, also works if the leaderboard is out of date
     leaderboard = get_object_or_404(models.Leaderboard, id=id)
     if leaderboard.closed:
         return False
@@ -34,8 +35,9 @@ def refresh_leaderboard_commits(id):
         # If the next link doesn't exist, return null
         commits_url = response.links.get("next", {}).get("url", None)
 
+        # Only add commits we don't have, if you do see the latest commit, exit early
         for commit in response.json():
-            if commit["node_id"] != latest_commit.nodeid:
+            if commit["node_id"] != latest_commit.nodeid and commit:
                 github_commits.append(commit)
             else:
                 break
@@ -45,6 +47,10 @@ def refresh_leaderboard_commits(id):
         for commit in github_commits:
             if models.Commit.objects.filter(nodeid=commit["node_id"]).exists():
                 continue  # skip if commit object already exists
+
+            # I am not sure why this happens but it can
+            if not commit["author"]:
+                return False
 
             models.Commit.objects.create(
                 leaderboard=leaderboard,
