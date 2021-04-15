@@ -18,13 +18,7 @@ def find_next(link):
             return a.strip()[1:-1]
 
 
-def is_obj_in_page(o, page):
-    for obj in page:
-        if obj["node_id"] == o.nodeid:
-            return True
-    return False
-
-
+# TODO: add more an error that says if the github link does not exist
 def refresh_leaderboard_commits(id):
     leaderboard = get_object_or_404(models.Leaderboard, id=id)
     if leaderboard.closed:
@@ -46,6 +40,7 @@ def refresh_leaderboard_commits(id):
 
     commits = []
     next_url = commits_url
+    # Github responses are paginated this removes the pages
     while True:
         response = requests.get(next_url, auth=(user, token))
         page = response.json()
@@ -55,25 +50,19 @@ def refresh_leaderboard_commits(id):
         # Github returns commits ordered by latest timestamp.
         # So, if page contains latest commit present on our system, then stop process
         # because, later commits must be already present in our system
-        if latest_commit:
-            if is_obj_in_page(latest_commit, page):
-                break
-
-        n = len(page)
-        # print(n)
-        if n == 0:
+        if len(page) == 0:
             break
-        link = response.headers.get("link")
-        if link is None:
+        if response.headers.get("link") is None:
             break
         next_url = find_next(response.headers["link"])
         if next_url is None:
             break
+        if latest_commit:
+            if latest_commit.nodeid in set(commit["node_id"] for commit in page):
+                break
 
-    # print(l[:2])
     updated = 0
     if response.status_code == 200:
-        # print(l[0])
         for commit in commits:
             if models.Commit.objects.filter(nodeid=commit["node_id"]).exists():
                 continue  # skip if commit object already exists
