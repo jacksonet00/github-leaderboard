@@ -182,10 +182,10 @@ def dashboard_post(request):
     if form.is_valid():
         data = form.cleaned_data
         add_owner = data["add_owner"]
-        del data["add_owner"]
+        del data["add_owner"]  # Drop the fields not needed by leaderboard model
         ldb = Leaderboard.objects.create(**data, owner=request.user)
         if add_owner:
-            ldb.participants.add(request.user)
+            ldb.participants.add(request.user)  # Add the creator as participant
         return render(request, template, context=dashboard_context(request))
     else:
         ctx = dashboard_context(request)

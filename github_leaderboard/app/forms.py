@@ -7,6 +7,7 @@ from github_leaderboard.app.models import Leaderboard
 
 class CreateLeaderboardForm(forms.ModelForm):
 
+    # If true, owner is added to leaderboard on creation
     add_owner = forms.BooleanField(initial=True, required=False)
 
     class Meta:
