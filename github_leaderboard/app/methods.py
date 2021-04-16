@@ -73,3 +73,17 @@ def refresh_leaderboard_commits(id):
         )
         updated += 1
     return {"total": len(github_commits), "new": updated}
+
+
+def has_social_token(user):
+    """Function to check if user has a social token,
+    that is has a linked github account
+
+    Returns:
+        True, if they do have a github auth token on the database
+        False, otherwise
+    """
+    token = SocialToken.objects.filter(
+        account__user=user, account__provider="github"
+    ).values_list("token")
+    return bool(token)
