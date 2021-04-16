@@ -121,13 +121,32 @@ class ManageLeaderboardView(View):
             return HttpResponseForbidden(render(request, "403.html"))
         else:
             form = ManageLeaderboardForm(request.POST)
-            print(form)
             if form.is_valid():
                 try:
                     if form.cleaned_data["name"]:
                         leaderboard.name = form.cleaned_data["name"]
                     if form.cleaned_data["repo_url"]:
-                        leaderboard.repo_url = form.cleaned_data["repo_url"]
+                        # Check if it's a change because this will be expensive
+                        if leaderboard.repo_url != form.cleaned_data["repo_url"]:
+                            leaderboard.repo_url = form.cleaned_data["repo_url"]
+                            try:
+                                methods.dump_commits(leaderboard)
+                                messages.warning(
+                                    request,
+                                    """
+                                    Commit history was dumped due to repo_url change,
+                                    you will want to refresh the leaderboard.
+                                    """,
+                                )
+                            except Exception as e:
+                                messages.error(
+                                    request,
+                                    f"""
+                                    Commits from old repo_url were not dumped due
+                                    to unexpected error:
+                                    {str(e)}
+                                    """,
+                                )
                     if form.cleaned_data["start"]:
                         leaderboard.start = form.cleaned_data["start"]
                     if form.cleaned_data["end"]:

@@ -87,3 +87,11 @@ def has_social_token(user):
         account__user=user, account__provider="github"
     ).values_list("token")
     return bool(token)
+
+
+def dump_commits(leaderboard):
+    """Dumps all commits with leaderboard as foreign key
+
+    Used when changing a repo_url, for example
+    """
+    models.Commit.objects.filter(leaderboard=leaderboard).delete()
