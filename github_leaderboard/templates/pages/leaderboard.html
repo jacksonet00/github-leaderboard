@@ -23,6 +23,7 @@
             {% if request.user == leaderboard.owner and not leaderboard.closed %}
             <a href="{% url 'manage_leaderboard_participants' id=leaderboard.id %}" class="btn btn-primary">Manage
                 Participant</a>
+            <a href="{% url 'manage_leaderboard' id=leaderboard.id %}" class="btn btn-primary">Manage Leaderboard</a>
             <a href="{% url 'close_leaderboard_if_ended' id=leaderboard.id %}" class="btn btn-primary">Close if Ended</a>
             {% endif %}
 
