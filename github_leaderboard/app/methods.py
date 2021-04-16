@@ -19,7 +19,11 @@ def refresh_leaderboard_commits(id):
     # Use the leaderboard's token to access github
     token = SocialToken.objects.filter(
         account__user=leaderboard.owner, account__provider="github"
-    ).values_list("token")[0][0]
+    ).values_list("token")
+    if token:
+        token = token[0][0]
+    else:
+        token = ""
 
     repo_str = urlparse(leaderboard.repo_url).path[1:]
     if repo_str[-1] == "/":
