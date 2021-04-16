@@ -130,6 +130,16 @@ def dashboard(request):
     if not request.user.is_authenticated:
         return HttpResponseForbidden(render(request, "403.html"))
     if request.method == "GET":
+        has_linked_github = methods.has_social_token(request.user)
+        if not has_linked_github:
+            messages.warning(
+                request,
+                """
+                Your account does not have a linked GitHub account.
+                It is recommended to link your account,
+                otherwise your leaderboards may only be able to refresh infrequently.
+                """,
+            )
         ctx = dashboard_context(request)
         return render(request, template, context=ctx)
     elif request.method == "POST":
