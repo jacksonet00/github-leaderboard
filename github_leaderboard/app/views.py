@@ -180,7 +180,8 @@ def dashboard_post(request):
     template = "pages/dashboard.html"
     form = CreateLeaderboardForm(request.POST)
     if form.is_valid():
-        Leaderboard.objects.create(**form.cleaned_data, owner=request.user)
+        ldb = Leaderboard.objects.create(**form.cleaned_data, owner=request.user)
+        ldb.participants.add(request.user)
         return render(request, template, context=dashboard_context(request))
     else:
         ctx = dashboard_context(request)
