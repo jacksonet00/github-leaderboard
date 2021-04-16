@@ -9,6 +9,7 @@ from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
+from github import GithubException
 
 from github_leaderboard.app.forms import CreateLeaderboardForm
 from github_leaderboard.app.models import Leaderboard
@@ -32,13 +33,15 @@ class FetchLeaderboardCommitsView(View):
         if leaderboard.closed:
             messages.error(self.request, "Leaderboard is closed. operation aborted.")
             return redirect("leaderboard", id=id)
-        success = methods.refresh_leaderboard_commits(id)
-        if success:
-            msg = str(success["new"]) + " records updated"
-            messages.success(self.request, msg)
+
+        try:
+            updates = methods.refresh_leaderboard_commits(id)
+            messages.success(self.request, str(updates["new"]) + " records updated")
             return redirect("leaderboard", id=id)
-        else:
-            messages.error(self.request, "unexpected error occured")
+        except GithubException as e:
+            messages.error(
+                self.request, "Error: " + str(e.status) + ", " + str(e.data["message"])
+            )
             return redirect("leaderboard", id=id)
 
 

@@ -1,4 +1,3 @@
-import logging
 from urllib.parse import urlparse
 
 from allauth.socialaccount.models import SocialToken
@@ -9,8 +8,6 @@ from github import Github
 from . import models
 
 User = get_user_model()
-_NOT_FOUND_STRING = "Not Found"  # Constant
-logger = logging.getLogger(__name__)
 
 
 def refresh_leaderboard_commits(id):
