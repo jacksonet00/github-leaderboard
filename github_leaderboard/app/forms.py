@@ -43,10 +43,6 @@ class ManageLeaderboardForm(forms.Form):
     values of a leaderboard
     """
 
-    class Meta:
-        model = Leaderboard
-        fields = ("name", "repo_url", "end", "start")
-
     name = forms.CharField(required=False, max_length=255)
     repo_url = forms.URLField(required=False)
     start = forms.DateTimeField(required=False)
