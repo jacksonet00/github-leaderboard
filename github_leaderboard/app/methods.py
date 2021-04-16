@@ -29,7 +29,10 @@ def refresh_leaderboard_commits(id):
     if repo_str[-1] == "/":
         repo_str = repo_str[:-1]
 
-    repo = Github(token).get_repo(repo_str)
+    if token:
+        repo = Github(token).get_repo(repo_str)
+    else:
+        repo = Github().get_repo(repo_str)
 
     github_commits = models.Commit.objects.filter(leaderboard=leaderboard).order_by(
         "-timestamp"
