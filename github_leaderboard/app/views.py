@@ -108,17 +108,25 @@ class ManageLeaderboardView(View):
 
     def get(self, request, id):
         ctx = self.context(id)
-        return render(request, self.template, ctx)
+        leaderboard = ctx["leaderboard"]
+        if request.user != leaderboard.owner:
+            return HttpResponseForbidden(render(request, "403.html"))
+        else:
+            return render(request, self.template, ctx)
 
     def post(self, request, id):
-        form = ManageLeaderboardForm(request.POST)
-        print(form)
         ctx = self.context(id)
-        if form.is_valid():
-            print(form.cleaned_data)
+        leaderboard = ctx["leaderboard"]
+        if request.user != leaderboard.owner:
+            return HttpResponseForbidden(render(request, "403.html"))
         else:
-            ctx["management_form"] = form
-        return render(request, self.template, ctx)
+            form = ManageLeaderboardForm(request.POST)
+            print(form)
+            if form.is_valid():
+                print(form.cleaned_data)
+            else:
+                ctx["management_form"] = form
+            return render(request, self.template, ctx)
 
     def context(self, id):
         return {
