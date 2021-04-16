@@ -51,7 +51,11 @@ def refresh_leaderboard_commits(id):
 
     updated = 0
     for commit in github_commits:
-        if models.Commit.objects.filter(nodeid=commit.sha).exists():
+        if models.Commit.objects.filter(
+            nodeid=commit.sha, leaderboard=leaderboard
+        ).exists():
+            # This if statement might be pointless because of the latest_commit check above
+            # Someone needs to test this and remove it if that is the case
             continue  # skip if commit object already exists
 
         # Missing author bug for some reason
