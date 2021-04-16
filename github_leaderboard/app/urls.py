@@ -22,6 +22,11 @@ urlpatterns = [
         name="manage_leaderboard_participants",
     ),
     path(
+        "leaderboard/<int:id>/manage_leaderboard",
+        views.ManageLeaderboardView.as_view(),
+        name="manage_leaderboard",
+    ),
+    path(
         "leaderboard/<int:id>/manage_participants/delete/<int:userid>",
         views.DeleteLeaderboardParticipantsView.as_view(),
         name="delete_leaderboard_participants",
