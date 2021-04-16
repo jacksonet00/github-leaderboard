@@ -7,9 +7,10 @@ from factory.django import DjangoModelFactory
 
 class UserFactory(DjangoModelFactory):
 
+    # See https://faker.readthedocs.io/en/stable/providers.html
     username = Faker("user_name")
     email = Faker("email")
-    name = Faker("name")
+    github_username = Faker("user_name")
 
     @post_generation
     def password(self, create: bool, extracted: Sequence[Any], **kwargs):
