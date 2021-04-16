@@ -6,6 +6,9 @@ from github_leaderboard.app.models import Leaderboard
 
 
 class CreateLeaderboardForm(forms.ModelForm):
+
+    add_owner = forms.BooleanField(initial=True, required=False)
+
     class Meta:
         model = Leaderboard
         fields = ("name", "repo_url", "end", "start")
@@ -24,6 +27,9 @@ class CreateLeaderboardForm(forms.ModelForm):
             Column(Field("end", css_class=self.FIELD_STYLE), css_class=self.COL_STYLE),
             Column(
                 Field("start", css_class=self.FIELD_STYLE), css_class=self.COL_STYLE
+            ),
+            Column(
+                Field("add_owner", css_class=self.FIELD_STYLE), css_class=self.COL_STYLE
             ),
         )
         self.helper.form_method = "post"
