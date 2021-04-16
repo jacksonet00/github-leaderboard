@@ -123,9 +123,22 @@ class ManageLeaderboardView(View):
             form = ManageLeaderboardForm(request.POST)
             print(form)
             if form.is_valid():
-                print(form.cleaned_data)
+                try:
+                    if form.cleaned_data["name"]:
+                        leaderboard.name = form.cleaned_data["name"]
+                    if form.cleaned_data["repo_url"]:
+                        leaderboard.repo_url = form.cleaned_data["repo_url"]
+                    if form.cleaned_data["start"]:
+                        leaderboard.start = form.cleaned_data["start"]
+                    if form.cleaned_data["end"]:
+                        leaderboard.end = form.cleaned_data["end"]
+                    leaderboard.save()
+                    messages.success(request, "Leaderboard updated successfully!")
+                except Exception as e:
+                    messages.error(request, f"Unexpected Error Occurred {str(e)}")
+                ctx["leaderboard"] = leaderboard  # Pass the updated leaderboard
             else:
-                ctx["management_form"] = form
+                ctx["management_form"] = form  # Pass the form back with errors
             return render(request, self.template, ctx)
 
     def context(self, id):
