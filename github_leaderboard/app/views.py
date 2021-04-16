@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from github import GithubException
 
-from github_leaderboard.app.forms import CreateLeaderboardForm
+from github_leaderboard.app.forms import CreateLeaderboardForm, ManageLeaderboardForm
 from github_leaderboard.app.models import Leaderboard
 
 from . import methods, models, scheduled_tasks
@@ -99,6 +99,32 @@ class ManageLeaderboardParticipantsView(View):
         leaderboard.participants.add(user)
         messages.success(request, "participant added successfully. ")
         return redirect("manage_leaderboard_participants", id=id)
+
+
+@method_decorator(login_required, name="dispatch")
+class ManageLeaderboardView(View):
+
+    template = "pages/manage_leaderboard.html"
+
+    def get(self, request, id):
+        ctx = self.context(id)
+        return render(request, self.template, ctx)
+
+    def post(self, request, id):
+        form = ManageLeaderboardForm(request.POST)
+        print(form)
+        ctx = self.context(id)
+        if form.is_valid():
+            print(form.cleaned_data)
+        else:
+            ctx["management_form"] = form
+        return render(request, self.template, ctx)
+
+    def context(self, id):
+        return {
+            "management_form": ManageLeaderboardForm,
+            "leaderboard": get_object_or_404(models.Leaderboard, id=id),
+        }
 
 
 @method_decorator(login_required, name="dispatch")
