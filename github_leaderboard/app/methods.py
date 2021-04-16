@@ -22,6 +22,9 @@ def refresh_leaderboard_commits(id):
     ).values_list("token")[0][0]
 
     repo_str = urlparse(leaderboard.repo_url).path[1:]
+    if repo_str[-1] == "/":
+        repo_str = repo_str[:-1]
+
     repo = Github(token).get_repo(repo_str)
 
     github_commits = models.Commit.objects.filter(leaderboard=leaderboard).order_by(
