@@ -73,6 +73,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "github_leaderboard.users.apps.UsersConfig",
+    # "github_leaderboard.api.apps.ApiConfig",
     # Your stuff: custom apps go here
     "github_leaderboard.app.apps.AppConfig",
 ]

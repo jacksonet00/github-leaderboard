@@ -50,6 +50,7 @@ class LeaderboardView(View):
     def get(self, request, id):
         leaderboard = get_object_or_404(models.Leaderboard, id=id)
         entries = leaderboard.get_ranked_user_commit_data()
+        
         context = {
             "leaderboard": leaderboard,
             "entries": entries,
