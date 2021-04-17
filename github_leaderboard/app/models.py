@@ -1,9 +1,12 @@
 import datetime as dt
+from datetime import datetime, timedelta 
 
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Count
 from django.utils import timezone
+import pytz
+
 
 User = get_user_model()
 
@@ -140,7 +143,7 @@ class Commit(models.Model):
     message = models.TextField()
     url = models.URLField()
     html_url = models.URLField()
-    timestamp = models.DateTimeField()
+    timestamp = models.DateField()
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)

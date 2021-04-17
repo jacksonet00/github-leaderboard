@@ -4,6 +4,7 @@ from allauth.socialaccount.models import SocialToken
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from github import Github
+from datetime import datetime, timedelta 
 
 from . import models
 
@@ -95,3 +96,8 @@ def dump_commits(leaderboard):
     Used when changing a repo_url, for example
     """
     models.Commit.objects.filter(leaderboard=leaderboard).delete()
+
+
+def daterange(start_date, end_date):
+    for n in range(int((end_date - start_date).days)):
+        yield start_date + timedelta(n)

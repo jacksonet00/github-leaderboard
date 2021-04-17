@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <div class="container">
     <div class="card text-center">
         <div class="card-header">
 
-            <h2 class="card-title text-center ">Leaderboard : {{leaderboard.name}}
+            <h2 class="card-title text-center display-4">Leaderboard : {{leaderboard.name}}
             </h2>
             {% if leaderboard.closed %}
             <span class="badge badge-pill badge-danger">Closed</span>
@@ -13,37 +14,40 @@
             <span class="badge badge-pill badge-success">Active</span>
             {% endif %}
 
-            <p class="card-text col">({{leaderboard.start.date}} - {{leaderboard.end.date}})</p>
+            <p class="card-text col lead font-weight-bold">({{leaderboard.start.date}} - {{leaderboard.end.date}})</p>
 
-            <p class="card-text col">github repo link: <a target="_blank"
+            <p class="card-text col lead"><span class="font-weight-bold">github repo link:</span> <a target="_blank"
                     href="{{leaderboard.repo_url}}">{{leaderboard.repo_url}}</a></p>
-            <p class="card-text col">Owner : {{leaderboard.owner}} </p>
+            <p class="card-text col lead"><span class="font-weight-bold">Owner:</span> <span
+                    class="badge text-white py-1 px-2  rounded-pill"
+                    style="background-color: crimson;">{{leaderboard.owner}}</span> </p>
             <a href="{% url 'leaderboard_refresh' id=leaderboard.id %}" class="btn btn-primary">Refresh</a>
 
             {% if request.user == leaderboard.owner and not leaderboard.closed %}
             <a href="{% url 'manage_leaderboard_participants' id=leaderboard.id %}" class="btn btn-primary">Manage
                 Participant</a>
             <a href="{% url 'manage_leaderboard' id=leaderboard.id %}" class="btn btn-primary">Manage Leaderboard</a>
-            <a href="{% url 'close_leaderboard_if_ended' id=leaderboard.id %}" class="btn btn-primary">Close if Ended</a>
+            <a href="{% url 'close_leaderboard_if_ended' id=leaderboard.id %}" class="btn btn-primary">Close if
+                Ended</a>
             {% endif %}
 
         </div>
 
         <div class="card-body">
-            <table class="table table-dark">
-                <thead>
+            <div class="display-4 text-center mb-3">Rank Table</div>
+
+            <table class="table  table-hover">
+                <thead class="thead-dark">
                     <tr>
                         <th scope="col">Rank</th>
                         <th scope="col">Username</th>
                         <th scope="col">Commits</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="thead-light">
                     {% for entry in entries %}
                     <tr>
-                        <th scope="row">{{forloop.counter}}</th>
-                        <!-- <td>{{entry.0}}</td>
-                        <td>{{entry.1}}</td> -->
+                        <th scope="row" style="width: 70px;">{{forloop.counter}}</th>
                         <td>{{entry.user}}</td>
                         <td>{{entry.total}}</td>
                     </tr>
@@ -52,6 +56,128 @@
             </table>
 
         </div>
+
+
+    </div>
+
+    <div class="card">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="display-4 text-center mb-3">Total commits chart</div>
+            <div id="container">
+                <canvas id="chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="display-4 text-center mb-3">User commits history chart</div>
+            <div id="container">
+                <canvas id="chart2"></canvas>
+            </div>
+        </div>
     </div>
 </div>
+
+
+<script>
+
+    const data1 = {
+        labels: {{ labels_chart1 | safe}},
+        datasets: [
+            {
+                label: 'Total number of commits',
+                data: {{ data_chart1 }},
+                backgroundColor: [ {% for key, value in datasets.items %}"{{ value.backgroundColor }}",{% endfor %} ],
+                borderColor: [ {% for key, value in datasets.items %}"{{ value.backgroundColor }}",{% endfor %} ],
+                borderWidth: 1,
+            },
+        ]
+    };
+
+    const config_chart1 = {
+        type: 'bar',
+        data: data1,
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                },
+                title: {
+                    display: true,
+                    text: 'Total commits chart'
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'User'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Total number of commits'
+                    },
+                    min: 0,
+                }
+            }
+        },
+    };
+
+
+    const data2 = {
+        labels: {{ labels_chart2 | safe}},
+        datasets: [
+            // {
+            //     label: 'Number of Commits',
+            //     data: {{ data_chart1 }},
+            // },
+            {% for key, value in datasets.items %}
+            {
+                label: "{{value.label}}",
+                data: {{ value.data }},
+                backgroundColor: "{{ value.backgroundColor }}",
+                // borderColor: "{{ value.backgroundColor }}",
+            },
+            {% endfor %}
+        ]
+    };
+
+    const config_chart2 = {
+    type: 'bar',
+    data: data2,
+    options: {
+        plugins: {
+            title: {
+                display: true,
+                text: 'User wise commits history'
+            },
+        },
+        responsive: true,
+        scales: {
+            x: {
+                stacked: true,
+            },
+            y: {
+                stacked: true
+            }
+        }
+    }
+    };
+
+    window.onload = function () {
+        var ctx_1 = document.getElementById('chart').getContext('2d');
+        window.myPie = new Chart(ctx_1, config_chart1);
+        
+        var ctx_2 = document.getElementById('chart2').getContext('2d');
+        window.myPie = new Chart(ctx_2, config_chart2);
+    };
+
+</script>
 {% endblock content %}
