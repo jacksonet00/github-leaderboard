@@ -92,7 +92,7 @@ class LeaderboardView(View):
             labels_chart2.append( str(date.date()))
 
             # get only those commits which are made at current date
-            commits = models.Commit.objects.filter(leaderboard=leaderboard, timestamp=date.date())
+            commits = models.Commit.objects.filter(leaderboard=leaderboard, timestamp=date.date(), user__in=user_set )
             count = commits.values('user').annotate(total=Count("user"))
 
             # append those users's commit count who have made commits at current date
