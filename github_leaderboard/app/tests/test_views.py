@@ -46,7 +46,7 @@ class LeaderboardViewTests(TestCase):
         request.user = self.user
 
         view = setup_view(
-            views.fetch_leaderboard_commits(), request, self.leaderboard.id
+            views.FetchLeaderboardCommitsView(), request, self.leaderboard.id
         )
         response = view.get(request, self.leaderboard.id)
         # print(response.status_code)
@@ -60,7 +60,7 @@ class LeaderboardViewTests(TestCase):
         )
         request.user = self.user
 
-        view = setup_view(views.leaderboard(), request, self.leaderboard.id)
+        view = setup_view(views.LeaderboardView(), request, self.leaderboard.id)
         response = view.get(request, self.leaderboard.id)
 
         assert response.status_code == 200

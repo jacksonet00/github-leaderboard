@@ -114,7 +114,7 @@ class Leaderboard(models.Model):
             if today > self.end:
                 print("Closing leaderboard " + str(self.name))
                 self.refresh()  # fetch latest commit data from repo before closing
-                ranked_data, users_without_commit = self.get_ranked_user_commit_data()
+                ranked_data = self.get_ranked_user_commit_data()
                 for entry in ranked_data:
                     user = User.objects.get(
                         github_username=entry["user__github_username"]
@@ -122,9 +122,6 @@ class Leaderboard(models.Model):
                     Result.objects.create(
                         leaderboard=self, user=user, score=entry["total"]
                     )
-
-                for user in users_without_commit:
-                    Result.objects.create(leaderboard=self, user=user, score=0)
 
                 self.closed = True
                 self.save()
