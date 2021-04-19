@@ -1,10 +1,10 @@
+from datetime import timedelta
 from urllib.parse import urlparse
 
 from allauth.socialaccount.models import SocialToken
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from github import Github
-from datetime import datetime, timedelta 
 
 from . import models
 

@@ -1,3 +1,4 @@
+from django.contrib.messages.storage.fallback import FallbackStorage
 from django.test import Client, RequestFactory, TestCase
 
 import github_leaderboard.app.models
@@ -41,6 +42,12 @@ class DashboardViewTests(TestCase):
         ldb.owner = self.user
         request = self.factory.get(self.URL)
         request.user = self.user
+
+        # https://stackoverflow.com/questions/11938164/why-dont-my-django-unittests-know-that-messagemiddleware-is-installed
+        setattr(request, "session", "session")
+        messages = FallbackStorage(request)
+        setattr(request, "_messages", messages)
+
         # Get Response
         response = views.dashboard(request)
         assert response.status_code == 200

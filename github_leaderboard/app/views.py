@@ -1,24 +1,20 @@
 import logging
+import random
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.db.models import Count
 from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 from github import GithubException
 
-from datetime import datetime, timedelta
-
 from github_leaderboard.app.forms import CreateLeaderboardForm, ManageLeaderboardForm
 from github_leaderboard.app.models import Leaderboard
-from django.db.models import Count
-
-import random
-
 
 from . import methods, models, scheduled_tasks
 
@@ -56,7 +52,7 @@ class LeaderboardView(View):
     def get(self, request, id):
         leaderboard = get_object_or_404(models.Leaderboard, id=id)
         entries = leaderboard.get_ranked_user_commit_data()
-        
+
         data_chart1 = []
         labels_chart1 = []
 
@@ -64,8 +60,8 @@ class LeaderboardView(View):
 
         for entry in entries:
             # generate randor color for dataset (for chart2)
-            random_value = lambda: random.randint(0,255)
-            color = '#%02X%02X%02X' % (random_value(),random_value(),random_value())
+            random_value = lambda: random.randint(0, 255)  # noqa : E731
+            color = "#%02X%02X%02X" % (random_value(), random_value(), random_value())
 
             # Prepare labels and data for chart1
             labels_chart1.append(entry["user"])
@@ -73,43 +69,41 @@ class LeaderboardView(View):
 
             # initialize dataset for chart2
             datasets[entry["user"]] = {
-                "label":entry["user"],
-                "data":[],
-                "backgroundColor":color,
+                "label": entry["user"],
+                "data": [],
+                "backgroundColor": color,
             }
-        
 
         user_set = set(
             entity[0]
             for entity in leaderboard.participants.all().values_list("github_username")
         )
 
-        data_chart2 = []
         labels_chart2 = []
 
         # iterate over all days between start and end of leaderboard
         for date in methods.daterange(leaderboard.start, leaderboard.end):
-            labels_chart2.append( str(date.date()))
+            labels_chart2.append(str(date.date()))
 
             # get only those commits which are made at current date
-            commits = models.Commit.objects.filter(leaderboard=leaderboard, timestamp=date.date(), user__in=user_set )
-            count = commits.values('user').annotate(total=Count("user"))
+            commits = models.Commit.objects.filter(
+                leaderboard=leaderboard, timestamp=date.date(), user__in=user_set
+            )
+            count = commits.values("user").annotate(total=Count("user"))
 
             # append those users's commit count who have made commits at current date
             for entry in count:
-                datasets[entry["user"]]['data'].append(entry['total'])
+                datasets[entry["user"]]["data"].append(entry["total"])
 
             # append those users's commit count who do not have made any commits at current date
             for user in user_set.difference(set(entity["user"] for entity in count)):
-                datasets[entry["user"]]['data'].append(0)
-        
+                datasets[entry["user"]]["data"].append(0)
+
         context = {
             "leaderboard": leaderboard,
             "entries": entries,
-            
             "data_chart1": data_chart1,
             "labels_chart1": labels_chart1,
-
             "labels_chart2": labels_chart2,
             "datasets": datasets,
         }
