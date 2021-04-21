@@ -1,5 +1,10 @@
 # Github Leaderboard
 
+This Django website allows people to login with their Github accounts, pull commits from Github repos,
+and rank users by the number of commits.
+
+[Application is deployed at Heroku.](https://fierce-shore-14743.herokuapp.com/)
+
 ## Developer Usage Documentation
 
 [The project is setup with cookiecutter and docker so follow this link.](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html)
@@ -30,7 +35,7 @@ pre-commit install
    docker-compose -f local.yml build
    ```
 
-2. If in production, we can easily change things by running the production setting files instead.
+2. If in production, we can easily change things by running the production setting files.
 
    ```bash
    docker-compose -f production.yml build
@@ -135,6 +140,13 @@ Do not use `localhost` for things. It breaks github redirect.
 1. Select the `Provider` and change to `Github`. Add the `Github Leaderboard` to `Name`
 
 1. Add your `Cilent ID` and `Secret Key` from when you saved `Github Leaderboard`
+
+## Heroku deploying
+[Follow this guide.](https://cookiecutter-django.readthedocs.io/en/latest/deployment-on-heroku.html)
+Ignore the settings to add AWS because we host staticfiles from the server itself using WhiteNoise.
+
+Note that `git push heroku master` should be `git push heroku main`.
+
 
 ## Project Design Documentation
 
