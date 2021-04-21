@@ -1,5 +1,6 @@
 import logging
 import random
+import threading
 
 from django.conf import settings
 from django.contrib import messages
@@ -18,7 +19,10 @@ from github_leaderboard.app.models import Leaderboard
 
 from . import methods, models, scheduled_tasks
 
+# TODO: Use celery instead this is janky
 if settings.AUTO_UPDATE_LEADERBOARD:
+    stopFlag = threading.Event()
+    LEADERBOARD_UPDATE_THREAD = scheduled_tasks.LeaderboardCloseTaskThread(stopFlag)
     scheduled_tasks.LEADERBOARD_UPDATE_THREAD.start()
 
 User = get_user_model()
