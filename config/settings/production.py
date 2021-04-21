@@ -153,4 +153,4 @@ LOGGING = {
 
 # Your stuff...
 # ------------------------------------------------------------------------------
-AUTO_UPDATE_LEADERBOARD = True
+AUTO_UPDATE_LEADERBOARD = False
