@@ -5,6 +5,12 @@ and rank users by the number of commits.
 
 [Application is deployed at Heroku.](https://fierce-shore-14743.herokuapp.com/)
 
+## Demo
+
+![Creating a leaderboard](./Resources/create_leaderboard.gif)
+
+![Managing leaderboard participants](./Resources/manage_participants.gif)
+
 ## Developer Usage Documentation
 
 [The project is setup with cookiecutter and docker so follow this link.](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html)
@@ -53,7 +59,7 @@ pre-commit install
    echo "<DEPENDENCY_NAME>==<VERSION_NUMBER>" >> requirements/production.txt
    ```
 
-2. Add the dependency to Django by modifying the ```INSTALLED_APPS``` array within the ```config/settings/local.py```
+2. Add the dependency to Django by modifying the `INSTALLED_APPS` array within the `config/settings/local.py`
    or `config/settings/production.py` file
 
 ### Run server @ localhost:8000
@@ -76,9 +82,9 @@ pre-commit install
 1. Ensure server is running
 2. Add a superusername with the `manage.py` as detailed below. Since you are running local Postgres instances, you add
    your own superuser identity.
-3. Visit ```localhost:8000/admin``` and login with that.
+3. Visit `localhost:8000/admin` and login with that.
 
-### Modify tables from ```github_leaderboard/app/models.py```
+### Modify tables from `github_leaderboard/app/models.py`
 
 1. Update schema
 2. Ensure server is not running
@@ -108,6 +114,7 @@ with `alias docker_django="docker-compose -f local.yml run --rm django python ma
 2. Log in through the admin panel
 
 ### Run Django pytest in containers
+
 ```bash
 docker-compose -f local.yml run --rm django pytest
 ```
@@ -122,18 +129,18 @@ Do not use `localhost` for things. It breaks github redirect.
 1. Go to `OAuth Apps` and click to `New OAuth App`
 
 1. Change `Application name` to something like `Git Leaderboards`.
- Change `Homepage url` to `http://0.0.0.0:8000`.
- Change `Authorization callback URL` to `http://0.0.0.0:8000/accounts/github/login/callback`.
+   Change `Homepage url` to `http://0.0.0.0:8000`.
+   Change `Authorization callback URL` to `http://0.0.0.0:8000/accounts/github/login/callback`.
 
-    Clearly you can change all of this for the production environment. Do not add an additional `/` to the end of
-    callback url or you will get an error.
+   Clearly you can change all of this for the production environment. Do not add an additional `/` to the end of
+   callback url or you will get an error.
 
 1. Save your `Cilent ID` and `Secret Key`. You need this for the Django app.
 
 1. Go to admin page at `http://0.0.0.0:8000/admin` or the production url.
 
 1. Go to `Sites` and add your `Domain Name` and `Display Name` to match your settings.
- `Domain Name` could be `0.0.0.0:8000` and `Display Name` could be w/e for local development.
+   `Domain Name` could be `0.0.0.0:8000` and `Display Name` could be w/e for local development.
 
 1. Go to `Social Application` and click on `add`.
 
@@ -142,11 +149,11 @@ Do not use `localhost` for things. It breaks github redirect.
 1. Add your `Cilent ID` and `Secret Key` from when you saved `Github Leaderboard`
 
 ## Heroku deploying
+
 [Follow this guide.](https://cookiecutter-django.readthedocs.io/en/latest/deployment-on-heroku.html)
 Ignore the settings to add AWS because we host staticfiles from the server itself using WhiteNoise.
 
 Note that `git push heroku master` should be `git push heroku main`.
-
 
 ## Project Design Documentation
 
@@ -154,4 +161,4 @@ Note that `git push heroku master` should be `git push heroku main`.
 
 Django provides a default User table in the database which automatically integrates with authorization and the admin
 panel. We will use this User for our app, but extend it to add additional functionality such as GitHub info and roles.
-These users are represented by the ```ExtendedUser``` class which has a One-to-One relationship with the default User.
+These users are represented by the `ExtendedUser` class which has a One-to-One relationship with the default User.
